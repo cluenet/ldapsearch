@@ -19,7 +19,9 @@ $LICENSE = <<<EOF
 
   -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-The source code of this application is available at scalar:/var/www/ldapsearch
+The source code of this application is available at:
+    git://github.com/grawity/cluenet-ldapsearch.git
+    http://github.com/grawity/cluenet-ldapsearch
 
 EOF;
 
