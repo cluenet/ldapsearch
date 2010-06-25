@@ -12,7 +12,8 @@
 	<span class="label">User name:</span>
 	<span class="value important"><?php echo $uid; ?></span>
 </p>
-	
+
+<?php /*
 <?php if (has("clueircnick")): ?>
 <p>
 	<span class="label">Cluepoints:</span>
@@ -22,6 +23,7 @@
 	<?php endif; ?>
 </p>
 <?php endif; ?>
+*/ ?>
 
 <?php if ($Moar and $HasShell): ?>
 <p>	
