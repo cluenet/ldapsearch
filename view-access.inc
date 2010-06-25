@@ -46,10 +46,9 @@ foreach (array_keys($Privileges) as $privEntry) {
 	$privType = strtok($privEntry, "^")."^";
 	$privValue = strtok(null);
 	
-	$level = -1;
-	
 	if (isset($AllPrivileges[$privEntry])) {
 		list ($level, $name) = $AllPrivileges[$privEntry];
+		
 		if ($name === null and isset($AllPrivileges[$privType])) {
 			$name = $AllPrivileges[$privType][1];
 		}
@@ -58,8 +57,7 @@ foreach (array_keys($Privileges) as $privEntry) {
 		list ($level, $name) = $AllPrivileges[$privType];
 	}
 	else {
-		$unknown[] = $privEntry;
-		continue;
+		$level = -1;
 	}
 	
 	if ($level >= 2 and !$EvenMoar) {
@@ -70,6 +68,10 @@ foreach (array_keys($Privileges) as $privEntry) {
 	elseif ($level >= 1 and !$Moar) {
 		# show only in 'access' tab
 		$numHidden++;
+		continue;
+	}
+	elseif ($level == -1) {
+		if ($Moar) $unknown[] = $privEntry;
 		continue;
 	}
 	else {
