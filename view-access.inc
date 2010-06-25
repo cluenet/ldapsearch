@@ -42,16 +42,25 @@ $numVeryHidden = 0;
 
 $EvenMoar = isset($_GET["evenmoar"]);
 
-foreach (array_keys($Privileges) as $privilege) {
-	$name = strtok($privilege, "^");
-	$value = strtok(null);
+foreach (array_keys($Privileges) as $privEntry) {
+	$privType = strtok($privEntry, "^")."^";
+	$privValue = strtok(null);
 	
-	if (isset($AllPrivileges[$privilege]))
-		list ($level, $name) = $AllPrivileges[$privilege];
-	elseif (isset($AllPrivileges[$name."^"]))
-		list ($level, $name) = $AllPrivileges[$name."^"];
-	else
-		list ($level, $name) = array(1, null);
+	$level = -1;
+	
+	if (isset($AllPrivileges[$privEntry])) {
+		list ($level, $name) = $AllPrivileges[$privEntry];
+		if ($name === null and isset($AllPrivileges[$name."^"])) {
+			$name = $AllPrivileges[$name."^"][1];
+		}
+	}
+	elseif (isset($AllPrivileges[$privType])) {
+		list ($level, $name) = $AllPrivileges[$privType];
+	}
+	else {
+		$unknown[] = $privEntry;
+		continue;
+	}
 	
 	if ($level >= 2 and !$EvenMoar) {
 		# hide completely
@@ -63,16 +72,11 @@ foreach (array_keys($Privileges) as $privilege) {
 		$numHidden++;
 		continue;
 	}
-	
-	if ($name == null) {
-		$unknown[] = $privilege;
-		continue;
-	}
 	else {
 		$numDisplay++;
 	}
 	
-	switch ($privilege) {
+	switch ($privEntry) {
 	case 'mail':
 		# show quota
 		if ($Moar and isset($Entry["mailquota"]))
@@ -80,10 +84,10 @@ foreach (array_keys($Privileges) as $privilege) {
 		break;
 		
 	default:
-		$name = str_replace('{}', htmlspecialchars($value), $name);
+		$name = str_replace('{}', htmlspecialchars($privValue), $name);
 	}
 	
-	if ($Moar) $name = "<code>{$privilege}</code>: {$name}";
+	#if ($Moar) $name = "<code>{$privEntry}</code>: {$name}";
 	
 	echo "\t<li>{$name}</li>\n";	
 }

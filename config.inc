@@ -90,6 +90,7 @@ $AllPrivileges = array(
 	'vps'        => array( 1, "CobiVPS" ),
 		
 	'acct^acctvote'	=> array( 0, "voting on account applications" ),
+	'dns^cluenet.org.'	=> array( 0, null ),
 	'dns^'		=> array( 1, "DNS control of <code>{}</code>" ),
 	'vpnpanel^'	=> array( 1, "VPN control of <code>{}</code>" ),
 	
