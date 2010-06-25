@@ -46,6 +46,7 @@ foreach (array_keys($Privileges) as $privEntry) {
 	$privType = strtok($privEntry, "^")."^";
 	$privValue = strtok(null);
 	
+	# get level and name
 	if (isset($AllPrivileges[$privEntry])) {
 		list ($level, $name) = $AllPrivileges[$privEntry];
 		
@@ -57,11 +58,20 @@ foreach (array_keys($Privileges) as $privEntry) {
 		list ($level, $name) = $AllPrivileges[$privType];
 	}
 	else {
-		$level = -1;
+		$level = 3;
 	}
 	
-	if ($level >= 2 and !$EvenMoar) {
-		# hide completely
+	# hide privs depending on their importance level
+	if ($level == 3) {
+		# unknown; show only in extended view of 'access'
+		if ($EvenMoar)
+			$unknown[] = $privEntry;
+		else
+			$numVeryHidden++;
+		continue;
+	}
+	elseif ($level >= 2 and !$EvenMoar) {
+		# show only in extended view of 'access'
 		$numVeryHidden++;
 		continue;
 	}
@@ -70,11 +80,8 @@ foreach (array_keys($Privileges) as $privEntry) {
 		$numHidden++;
 		continue;
 	}
-	elseif ($level == -1) {
-		if ($Moar) $unknown[] = $privEntry;
-		continue;
-	}
 	else {
+		# show everywhere
 		$numDisplay++;
 	}
 	
@@ -89,20 +96,22 @@ foreach (array_keys($Privileges) as $privEntry) {
 		$name = str_replace('{}', htmlspecialchars($privValue), $name);
 	}
 	
-	#if ($Moar) $name = "<code>{$privEntry}</code>: {$name}";
+	if ($Moar) $name = "{$name} <i>(<code>{$privEntry}</code>)</i>";
 	
 	echo "\t<li>{$name}</li>\n";	
 }
 
-#if ($Moar) {
 foreach ($unknown as $privilege) {
 	$numDisplay++;
-	echo "\t<li><em>Unknown service <code>{$privilege}</code></em></li>\n";
+	echo "\t<li><em>Unknown service: <code>{$privilege}</code></em></li>\n";
 }
-#}
 
-if ($numDisplay == 0)
-	echo "\t<li><em>None :(</em></li>\n";
+if ($numDisplay == 0) {
+	if ($numHidden > 0)
+		echo "\t<li><em>Nothing to display</em></li>\n";
+	else
+		echo "\t<li><em>No privileges :(</em></li>\n";
+}
 
 echo "</ul>\n";
 
