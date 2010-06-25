@@ -64,6 +64,9 @@ $SingleAttributes = array(
 	'altemail', ## ?
 );
 
+define("PRIV_DEPRECATED", "<em>(old)</em> ");
+define("PRIV_OBSOLETE", "<strong>(obsolete)</strong> ");
+
 # Privileges only shown in extended view
 # 0: display in info
 # 1: display in "Access" tab (default)
@@ -72,27 +75,34 @@ $AllPrivileges = array(
 	'marriage'   => array( 1, "marriage" ),
 	'jackass'    => array( 1, "being a jackass" ),
 	
-	'ssh'        => array( 1, "<em>old</em> shell access [ssh]" ),
-	'sshd'       => array( 1, "<em>old</em> shell access [sshd]" ),
-	'sudo'       => array( 2, "<em>old</em> sudo" ),
-	'login'      => array( 2, "<em>old</em> console login" ),
-	'su'         => array( 2, "<em>old</em> su" ),
-	'cron'       => array( 2, "<em>old</em> crontab" ),
-	'atd'        => array( 2, "<em>old</em> atd" ),
-	'chfn'       => array( 2, "<em>old</em> chfn" ),
-	'chsh'       => array( 2, "<em>old</em> chsh" ),
+	'ssh'        => array( 2, PRIV_DEPRECATED."shell access [ssh]" ),
+	'sshd'       => array( 2, PRIV_DEPRECATED."shell access [sshd]" ),
+	'sudo'       => array( 2, PRIV_DEPRECATED."sudo" ),
+	'login'      => array( 2, PRIV_DEPRECATED."console login" ),
+	'su'         => array( 2, PRIV_DEPRECATED."su" ),
+	'cron'       => array( 2, PRIV_DEPRECATED."crontab" ),
+	'atd'        => array( 2, PRIV_DEPRECATED."atd" ),
+	'chfn'       => array( 2, PRIV_DEPRECATED."chfn" ),
+	'chsh'       => array( 2, PRIV_DEPRECATED."chsh" ),
 	
 	'mail'       => array( 0, "Cluenet.org mail" ),
 	'wiki'       => array( 2, "wiki" ),
-	'forum'      => array( 2, "<a href=\"http://forum.cluenet.org/\">forum</a>" ),
+	'forum'      => array( 2, PRIV_OBSOLETE."<a href=\"http://forum.cluenet.org/\">forum</a>" ),
 	'bugs'       => array( 2, "Bugzilla" ),
 	'cacti'      => array( 2, "Cacti stats" ),
 	'vps'        => array( 1, "CobiVPS" ),
-		
-	'acct^acctvote'	=> array( 0, "voting on account applications" ),
+	
+	'createacct'		=> array( 2, PRIV_OBSOLETE."approval of new accounts" ),
+	'sshvote'			=> array( 2, PRIV_OBSOLETE."voting on shell applications" ),
+	'sshapprove'		=> array( 2, PRIV_OBSOLETE."approval of shell applications" ),
+	'sshvoteoverride'	=> array( 2, PRIV_OBSOLETE."overriding shell application votes" ),
+	
+	'acct^acctvote'		=> array( 0, "voting on access applications" ),
+	'dns^'				=> array( 1, "DNS control of <code>{}</code>" ),
 	'dns^cluenet.org.'	=> array( 0, null ),
-	'dns^'		=> array( 1, "DNS control of <code>{}</code>" ),
-	'vpnpanel^'	=> array( 1, "VPN control of <code>{}</code>" ),
+	'dns^in-addr.arpa.'	=> array( 0, null ),
+	'tokengen^'			=> array( 2, "access token generation for <code>{}</code>" ),
+	'vpnpanel^'			=> array( 1, "VPN control of <code>{}</code>" ),
 	
 	
 );
