@@ -1,23 +1,38 @@
 <?php
 include "config.inc";
-$what = "(uid=".$_GET["uid"].")";
-$ldapConn = ldap_connect(LDAP_URI);
-ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
-if (BIND_DN == False || BIND_PASS == False) {
-	ldap_bind($ldapConn);
-}
-else {
-	ldap_bind($ldapConn, BIND_DN, BIND_PASS);
-}
-$ldapSearch = ldap_search($ldapConn, BASE_DN, $what, Array("jpegphoto"), null, 0);
-if (ldap_count_entries($ldapConn, $ldapSearch) != 1) {
-	header("Location: http://wiki.xkcd.com/wirc/bucket.png");
+include "functions.inc";
+
+$conn = ldap_connect_and_do_things();
+if (!$conn) {
+	header("Content-Type: text/plain");
+	print_r($SysErrors);
 	die();
 }
-$results = ldap_first_entry($ldapConn, $ldapSearch);
-$photo = ldap_get_values_len($ldapConn, $results, "jpegphoto");
-ldap_unbind($ldapConn);
-header("Content-Type: image/jpeg");
-echo $photo[0];
 
-?>
+$uid = $_GET["uid"];
+
+$search = ldap_search($conn,
+	"ou=people,".BASE_DN,
+	"(uid={$uid})",
+	array("jpegphoto"),
+	false,
+	0);
+
+if (ldap_count_entries($conn, $search) != 1) {
+	header("{$_SERVER["SERVER_PROTOCOL"]} 404");
+	header("Location: http://wiki.xkcd.com/wirc/images/Bucket.png");
+	die("User not found");
+}
+
+$entry = ldap_first_entry($conn, $search);
+$values = ldap_get_values_len($conn, $entry, "jpegphoto");
+if ($values === false) {
+	header("{$_SERVER["SERVER_PROTOCOL"]} 404");
+	header("Location: http://wiki.xkcd.com/wirc/images/Bucket.png");
+	die("User has no photo");
+}
+
+ldap_unbind($conn);
+
+header("Content-Type: image/jpeg");
+print $values[0];
