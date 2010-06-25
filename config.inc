@@ -69,26 +69,31 @@ $SingleAttributes = array(
 # 1: display in "Access" tab (default)
 # 2: do not display
 $AllPrivileges = array(
-	'marriage'   => array( 0, "marriage" ),
+	'marriage'   => array( 1, "marriage" ),
 	'jackass'    => array( 1, "being a jackass" ),
 	
-	'ssh'        => array( 0, "shell access (ssh)" ),
-	'sshd'       => array( 1, "shell access (sshd)" ),
-	'sudo'       => array( 2, "sudo" ),
-	'login'      => array( 2, "local (console) login" ),
-	'su'         => array( 2, "su" ),
-	'cron'       => array( 2, "crontab" ),
-	'atd'        => array( 2, "atd" ),
-	'chfn'       => array( 2, "chfn" ),
-	'chsh'       => array( 2, "chsh" ),
+	'ssh'        => array( 1, "<em>old</em> shell access [ssh]" ),
+	'sshd'       => array( 1, "<em>old</em> shell access [sshd]" ),
+	'sudo'       => array( 2, "<em>old</em> sudo" ),
+	'login'      => array( 2, "<em>old</em> console login" ),
+	'su'         => array( 2, "<em>old</em> su" ),
+	'cron'       => array( 2, "<em>old</em> crontab" ),
+	'atd'        => array( 2, "<em>old</em> atd" ),
+	'chfn'       => array( 2, "<em>old</em> chfn" ),
+	'chsh'       => array( 2, "<em>old</em> chsh" ),
 	
-	'mail'       => array( 0, "mailbox" ),
+	'mail'       => array( 0, "Cluenet.org mail" ),
 	'wiki'       => array( 2, "wiki" ),
 	'forum'      => array( 2, "<a href=\"http://forum.cluenet.org/\">forum</a>" ),
-	#'moodle'     => array( 2, "
 	'bugs'       => array( 2, "Bugzilla" ),
 	'cacti'      => array( 2, "Cacti stats" ),
 	'vps'        => array( 1, "CobiVPS" ),
+		
+	'acct^acctvote'	=> array( 0, "voting on account applications" ),
+	'dns^'		=> array( 1, "DNS control of <code>{}</code>" ),
+	'vpnpanel^'	=> array( 1, "VPN control of <code>{}</code>" ),
+	
+	
 );
 
 # Ignority level

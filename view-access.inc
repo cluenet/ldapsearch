@@ -23,9 +23,11 @@ foreach ($Entry['host'] as $host) {
 <ul>
 <?php
 function level($name) {
-	$name = strtolower($name);
-	global $AllPrivileges, $Moar;
-	return isset($AllPrivileges[$name])? $AllPrivileges[$name][0] : 1;
+	global $AllPrivileges;
+	if (isset($AllPrivileges[$name]))
+		return $AllPrivileges[$name][0];
+	else
+		return -1;
 }
 
 if (!$Moar and isset($Privileges['ssh']) and isset($Privileges['sshd'])) {
@@ -41,21 +43,34 @@ $numVeryHidden = 0;
 $EvenMoar = isset($_GET["evenmoar"]);
 
 foreach (array_keys($Privileges) as $privilege) {
-	if (level($privilege) >= 2 and !$EvenMoar) {
-		# hide completely
-		$numVeryHidden++; continue;
-	}
-	elseif (level($privilege) >= 1 and !$Moar) {
-		# hide only in info view
-		$numHidden++; continue;
-	}
-
-	if (!isset($AllPrivileges[$privilege])) {
-		$unknown[] = $privilege; continue;
-	}	
-	$numDisplay++;
+	$name = strtok($privilege, "^");
+	$value = strtok(null);
 	
-	$name = $AllPrivileges[$privilege][1];
+	if (isset($AllPrivileges[$privilege]))
+		list ($level, $name) = $AllPrivileges[$privilege];
+	elseif (isset($AllPrivileges[$name."^"]))
+		list ($level, $name) = $AllPrivileges[$name."^"];
+	else
+		list ($level, $name) = array(1, null);
+	
+	if ($level >= 2 and !$EvenMoar) {
+		# hide completely
+		$numVeryHidden++;
+		continue;
+	}
+	elseif ($level >= 1 and !$Moar) {
+		# show only in 'access' tab
+		$numHidden++;
+		continue;
+	}
+	
+	if ($name == null) {
+		$unknown[] = $privilege;
+		continue;
+	}
+	else {
+		$numDisplay++;
+	}
 	
 	switch ($privilege) {
 	case 'mail':
@@ -63,12 +78,9 @@ foreach (array_keys($Privileges) as $privilege) {
 		if ($Moar and isset($Entry["mailquota"]))
 			$name = "{$name} <em>(quota: ".formatQuota($Entry["mailquota"]).")</em>";
 		break;
-
-	case 'marriage':
-		# show name
-		if ($Entry["uidnumber"] == 25001) $name = "lamia";
-		if ($Entry["uidnumber"] == 25055) $name = "Crispy";
-		break;
+		
+	default:
+		$name = str_replace('{}', htmlspecialchars($value), $name);
 	}
 	
 	if ($Moar) $name = "<code>{$privilege}</code>: {$name}";
