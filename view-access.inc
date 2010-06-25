@@ -50,8 +50,8 @@ foreach (array_keys($Privileges) as $privEntry) {
 	
 	if (isset($AllPrivileges[$privEntry])) {
 		list ($level, $name) = $AllPrivileges[$privEntry];
-		if ($name === null and isset($AllPrivileges[$name."^"])) {
-			$name = $AllPrivileges[$name."^"][1];
+		if ($name === null and isset($AllPrivileges[$privType])) {
+			$name = $AllPrivileges[$privType][1];
 		}
 	}
 	elseif (isset($AllPrivileges[$privType])) {
