@@ -74,6 +74,8 @@ $Stylesheets = array(
 	'pretty',
 	);
 
+@include "functions.inc";
+
 $Style = $Stylesheets[0];
 if (isset($_GET["style"])) {
 	if (in_array($_GET["style"], $Stylesheets)) {
@@ -84,10 +86,8 @@ if (isset($_GET["style"])) {
 		setcookie("style", null, 0);
 	}
 
-	parse_str($_SERVER["QUERY_STRING"], $request);
-	unset($request["style"]);
-	$request = http_build_query($request);
-	header("Location: /{$request}");
+	$request = mangle_query(null, array('style'));
+	header("Location: /?{$request}");
 	unset($request);
 }
 elseif (isset($_COOKIE["style"])) {
@@ -98,8 +98,6 @@ elseif (isset($_COOKIE["style"])) {
 		setcookie("style", null, 0);
 	}
 }
-
-@include "functions.inc";
 
 // Construct LDAP filter from query...
 if (isset($_GET["q"])) {
@@ -299,9 +297,9 @@ if ($nextstyle === false)
 else
 	$nextstyle++;
 
-parse_str($_SERVER["QUERY_STRING"], $request);
-$request["style"] = $Stylesheets[$nextstyle % count($Stylesheets)];
-$request = http_build_query($request);
+$request = mangle_query(array(
+	'style' => $Stylesheets[$nextstyle % count($Stylesheets)],
+	));
 ?>
 <a href="?<?php echo htmlspecialchars($request) ?>" style="color: black">a small clicky link</a> | grawity, 2009</p>
 

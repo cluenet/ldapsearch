@@ -1,5 +1,20 @@
 <?php
 # vim: ft=php
+
+function mangle_query($add, $remove=null) {
+	parse_str($_SERVER["QUERY_STRING"], $query);
+	
+	if ($add !== null)
+		foreach ($add as $key => $value)
+			$query[$key] = $value;
+	
+	if ($remove !== null)
+		foreach ($remove as $key)
+			unset($query[$key]);
+	
+	return http_build_query($query);
+}
+
 function fixEntry($entry) {
 	$new = array();
 	global $SingleAttributes;
