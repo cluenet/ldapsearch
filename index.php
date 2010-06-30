@@ -68,31 +68,35 @@ switch (!empty($_GET["view"]) ? $_GET["view"] : "simple") {
 		$View = $_GET["view"];
 }
 
-# Use alternate stylesheet?
-$Alt = true;
-# switched default to "true" for the hell of it
+$Stylesheets = array(
+	# zeroth entry is the default
+	'simple',
+	'pretty',
+	);
 
-if (isset($_GET["alt"])) {
-	switch ($_GET["alt"]) {
-	case "on":
-		setcookie("altstyle", 1, time()+60*60*24*365);
-		$Alt = true;
-		break;
-	case "off":
-		setcookie("altstyle", 0, 0);
-		$Alt = false;
-		break;
-	case "":
-	default:
-		$Alt = true;
+$Style = $Stylesheets[0];
+if (isset($_GET["style"])) {
+	if (in_array($_GET["style"], $Stylesheets)) {
+		$Style = $_GET["style"];
+		setcookie("style", $Style, strtotime("+1 year"));
 	}
-	$request = preg_replace("/(\??&)?alt=(on|off)/", "", $_SERVER["REQUEST_URI"]);
+	else {
+		setcookie("style", null, 0);
+	}
+
+	parse_str($_SERVER["QUERY_STRING"], $request);
+	unset($request["style"]);
+	$request = http_build_query($request);
 	header("Location: {$request}");
+	unset($request);
 }
-else {
-	# If "alternate style" cookie is present...
-	if (isset($_COOKIE["altstyle"]))
-		$Alt = (int)$_COOKIE["altstyle"] == 1;
+elseif (isset($_COOKIE["style"])) {
+	if (in_array($_COOKIE["style"], $Stylesheets)) {
+		$Style = $_COOKIE["style"];
+	}
+	else {
+		setcookie("style", null, 0);
+	}
 }
 
 @include "functions.inc";
@@ -221,8 +225,10 @@ if ($Title != "") $Title .= " - ";
 		font-style: italic;
 	}
 	</style>
-	<link rel="<?php if ($Alt) echo "alternate "; ?>stylesheet" type="text/css" href="pretty.css" title="web2.0ish" />
-	<link rel="<?php if (!$Alt) echo "alternate "; ?>stylesheet" type="text/css" href="simple.css" title="web1.5ish" />
+<?php foreach ($Stylesheets as $s):
+	$rel = ($s == $Style)? "stylesheet" : "alternate stylesheet";
+	echo "\t <link rel=\"{$rel}\" href=\"{$s}.css\" title=\"{$s}\" />\n";
+endforeach; ?>
 </head>
 <body>
 
@@ -286,8 +292,18 @@ else {
 }
 ?>
 
-<p class="footer"><?php echo "<a href=\"?{$_SERVER["QUERY_STRING"]}&alt=".($Alt?"off":"on")."\" style=\"color: black;\">a small clicky link</a>"; ?> |
-grawity, 2009</p>
+<p class="footer"><?php
+$nextstyle = array_search($Style, $Stylesheets, true);
+if ($nextstyle === false)
+	$nextstyle = 1;
+else
+	$nextstyle++;
+
+parse_str($_SERVER["QUERY_STRING"], $request);
+$request["style"] = $Stylesheets[$nextstyle % count($Stylesheets)];
+$request = http_build_query($request);
+?>
+<a href="?<?php echo htmlspecialchars($request) ?>" style="color: black">a small clicky link</a> | grawity, 2009</p>
 
 </body>
 </html>
