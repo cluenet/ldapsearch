@@ -2,7 +2,7 @@ body {
 	font-family: "DejaVu Sans", "Segoe UI", Arial, sans-serif;
 	font-size: 10pt;
 	background: #000;
-	background: url(img/drp_by_orbatid.jpg) fixed no-repeat #000;
+	background: url(http://fc01.deviantart.net/fs71/f/2010/181/7/e/2007_03_29___spikes_2_by_grawity.jpg) fixed no-repeat #000;
 	color: #fff;
 	max-width: 650px;
 	margin-left: auto;
@@ -47,10 +47,16 @@ input#q {
 td { padding: 0.2em; }
 .box {
 	color: #fff;
-	background: #000;
-	border: 1px solid #000;
-	opacity: 0.7;
+	/* rgba is supported by all major browsers, according
+	 * to http://css-tricks.com/rgba-browser-support/
+	 */
+	background: rgb(0, 0, 0);
+	background: rgba(0, 0, 0, 0.75);
+	/*opacity: 0.7;*/
+
 	-moz-border-radius: 5px;
+	border-radius: 5px;
+
 	padding: 0.2em;
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
