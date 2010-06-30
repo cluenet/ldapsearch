@@ -1,4 +1,5 @@
 <!-- One result, SSH key view -->
+<?php ?>
 <div class="box">
 <h2>SSH public keys</h2>
 <?php
@@ -9,21 +10,23 @@ function snipOptions($key) {
 		unset($matches);
 	}
 	
-	if (preg_match("/([a-z-]+) (.+?)(?: (.*))\$/", $key, $matches))
+	if (preg_match("/([a-z-]+?) ([A-Za-z0-9\\-+\\/=]+?)(?: (.*))?\$/", $key, $matches))
 		return $matches;
 	else
 		return false;
 }
 
-foreach ($Entry["cluesshpubkey"] as $e):
-$key = snipOptions($e);
+foreach ($Entry["cluesshpubkey"] as $key):
+$info = snipOptions($e);
 
-if ($key === false)
-	echo "<h3 class=\"error\">Unrecognized key</h3>\n";
+if ($info === false)
+	echo "<h3 class=\"error\">invalid key</h3>\n";
+elseif (!isset($info[3]))
+	echo "<h3><i>unnamed key</i></h3>\n";
 else
-	echo "<h3>{$key[3]}</h3>\n";
+	echo "<h3>{$info[3]}</h3>\n";
 
-echo "<input type=\"text\" class=\"sshkey\" readonly=\"readonly\" value=\"" . htmlspecialchars($e) . "\" /><br />\n";
+echo "<input type=\"text\" class=\"sshkey\" readonly value=\"" . htmlspecialchars($key) . "\" onclick=\"\" /><br />\n";
 
 endforeach; ?>
 </div>
