@@ -178,17 +178,15 @@ switch ($NumResults) {
 }
 if ($Title != "") $Title .= " - ";
 
-// THE (XHTML) TIME IS NOW ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+?>
+<!DOCTYPE html>
+<html>
 <?php echo "<!--\n{$LICENSE}\n-->\n"; ?>
 <head>
-	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+	<meta http-equiv="Content-Type" content="text/plain; charset=utf-8">
 	<title><?php echo $Title; ?>ClueLDAP</title>
-	<meta http-equiv="X-UA-Compatible" content="IE=8" />
-	<meta name="author" content="Mantas Mikulėnas" />
-	<style type="text/css">
+	<meta name="author" content="Mantas Mikulėnas">
+	<style>
 	pre, code {
 		font-family: Consolas, "DejaVu Mono", monospace;
 	}
@@ -208,7 +206,7 @@ if ($Title != "") $Title .= " - ";
 	</style>
 <?php foreach ($Stylesheets as $s):
 	$rel = ($s == $Style)? "stylesheet" : "alternate stylesheet";
-	echo "\t <link rel=\"{$rel}\" href=\"{$s}.css\" title=\"{$s}\" />\n";
+	echo "\t <link rel=\"{$rel}\" href=\"{$s}.css\" title=\"{$s}\">\n";
 endforeach; ?>
 </head>
 <body>
@@ -258,8 +256,7 @@ if ($NumResults == -1) {
 elseif ($NumResults == 0) {
 ?>
 <div class="box">
-<h1>403½ Not Found</h1>
-<p>Sorry, try again.</p>
+<h1>Not found.</h1>
 </div>
 <?php
 }
@@ -275,10 +272,7 @@ else {
 
 <p class="footer"><?php
 $nextstyle = array_search($Style, $Stylesheets, true);
-if ($nextstyle === false)
-	$nextstyle = 1;
-else
-	$nextstyle++;
+$nextstyle++;
 
 $request = mangle_query(array(
 	'style' => $Stylesheets[$nextstyle % count($Stylesheets)],
