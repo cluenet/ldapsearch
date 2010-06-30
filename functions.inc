@@ -93,28 +93,41 @@ function formatSize($bytes, $decimal = false) {
 }
 
 
-function linkify($what, $where = "interwebs") {
-	$url = "";
-	$q = urlencode($what);
-	switch ($where) {
-		case 'www': $url = urldecode($q); break;
-		case 'xmpp': $url = 'xmpp://'.$q; break;
-		case 'aim': $url = 'aim:goim?screenname='.$q; break;
-		case 'msn': $url = 'msnim:chat?contact='.$q; break;
-		case 'yahooim': $url = 'ymsgr:sendIM?'.$q; break;
-		case 'mail': $url = 'mailto:'.$q; break;
-		case 'twitter': $url = 'https://twitter.com/'.$q; break;
-		case 'digg': $url = 'http://digg.com/users/'.$q; break;
-		case 'slashdot': $url = 'http://slashdot.org/~'.$q; break;
-		case 'freshmeat': $url = 'http://freshmeat.net/~'.$q; break;
-		case 'github': $url = 'http://github.com/'.$q; break;
-		case 'googlecode': $url = 'http://code.google.com/p/'.$q.'/'; break;
-		case 'lastfm': $url = 'http://last.fm/user/'.$q; break;
-		case 'wikipedia': $url = 'http://en.wikipedia.org/wiki/User:'.$q; break;
-		//case 'lmgtfy': $url = 'http://lmgtfy.com/?q='
-		default: $url = 'Programmer failed (debug: '.$where.')';
+function urlify($addr, $scheme) {
+	$templates = array(
+		"www" => "%s",
+		"xmpp" => "xmpp://%s",
+		"aim" => "aim:goim?screenname=%s",
+		"msn" => "msnim:chat?contact=%s",
+		"yahooim" => "ymsgr:sendIM?%s",
+
+		"mail" => "mailto:%s",
+
+		"twitter" => "https://twitter.com/%s",
+		"digg" => "http://digg.com/users/%s",
+		"slashdot" => "http://slashdot.org/~%s",
+		"freshmeat" => "http://freshmeat.net/~%s",
+		"github" => "https://github.com/%s",
+		"googlecode" => "http://code.google.com/p/%s/",
+		"lastfm" => "http://last.fm/user/%s",
+		"wikipedia" => "http://en.wikipedia.org/wiki/User:%s",
+	);
+
+	if (array_key_exists($scheme, $templates))
+		return sprintf($templates[$scheme], $addr);
+	else
+		return $addr;
+}
+
+function linkify($addr, $site) {
+	if (is_array($addr)) {
+		foreach ($addr as &$k)
+			$k = linkify($k, $site);
+		return $addr;
 	}
-	$link = '<a href="'.htmlspecialchars($url).'" class="ext">'.$what.'</a>';
+
+	$url = urlify($addr, $site);
+	$link = '<a href="'.htmlspecialchars($url).'" class="ext">'.$addr.'</a>';
 	return $link;
 }
 
@@ -132,7 +145,7 @@ function condLink($cond, $title, $url) {
 function htmlize($in) {
 	if (is_array($in))
 		foreach ($in as $k => $v) $in[$k] = htmlize($in[$k]);
-	else 
+	else
 		$in = htmlspecialchars($in);
 	return $in;
 }
@@ -197,7 +210,7 @@ function ldap_connect_and_do_things() {
 
 function has($what) {
 	global $Entry;
-	if (is_array($what)) 
+	if (is_array($what))
 		return hasAny($what);
 	return isset($Entry[strtolower($what)]);
 }

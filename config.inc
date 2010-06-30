@@ -61,7 +61,6 @@ $SingleAttributes = array(
 	'gecos',
 	'loginshell',
 	'cn',
-	'altemail', ## ?
 );
 
 define("PRIV_DEPRECATED", "<em>(old)</em> ");
