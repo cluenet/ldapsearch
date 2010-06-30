@@ -102,43 +102,40 @@ elseif (isset($_COOKIE["style"])) {
 // Construct LDAP filter from query...
 if (isset($_GET["q"])) {
 	$Query = trim($_GET["q"]);
-	// has filter!
+	// user entered LDAP filter
 	if (!empty($Query) and $Query[0] == "(") {
 		$Filter = $Query;
 	}
-	// has googley query!
+	// googley 'key:value' query
 	elseif (strpos($Query, ':') !== false) {
-		$prefix = substr($Query, 0, strpos($Query, ':'));
-		$q = trim(substr($Query, strpos($Query, ':')+1));
-		switch (rtrim(strtolower($prefix), ':')) {
+		list ($prefix, $q) = explode(':', $Query, 2);
+		switch (strtolower($prefix)) {
 		case 'irc':
-			$Filter = "(clueIrcNick=".$q.")"; break;
+			$Filter = "(clueIrcNick={$q})"; break;
 		case 'xmpp':
 		case 'jabber':
 		case 'gtalk':
-			$Filter = "(xmppUri=".$q.")"; break;
+			$Filter = "(xmppUri={$q})"; break;
 		case 'msn':
 		case 'msnim':
 		case 'live':
 		case 'liveim':
 		case 'wlm':
-			$Filter = "(msnSn=".$q.")"; break;
+			$Filter = "(msnSn={$q})"; break;
 		case 'aim':
-		case 'aol':
-		case 'aolim':
-			$Filter = "(aimSn=".$q.")"; break;
+			$Filter = "(aimSn={$q})"; break;
 		case 'pgp':
 		case 'pgpkey':
 		case 'gpg':
 		case 'gpgkey':
-			$Filter = "(pgpKeyId=".$q.")"; break;
+			$Filter = "(pgpKeyId={$q})"; break;
 		default:
-			$Filter = "(".$prefix."=".$q.")"; break;
+			$Filter = "({$prefix}=${q})"; break;
 		}
 	}
-	// has username!
+	// username
 	else {
-		$Filter = "(uid=".$Query.")";
+		$Filter = "(uid={$Query})";
 	}
 }
 // ...or show the welcome page.
@@ -161,20 +158,6 @@ do if ($Query) {
 		$Entry = ldap_get_entries($ldapConn, $ldapSH);
 		ldap_unbind($ldapConn);
 	}
-	
-	/*
-	for (
-		$E = ldap_first_entry($ldapConn, $ldapSH);
-		$A = ldap_get_attributes($ldapConn, $E);
-		$E = ldap_next_entry($ldapConn, $E)
-	) {
-		$Photo[$
-	*/
-	/* if ($NumResults == 1) {
-		$E = ldap_first_entry($ldapConn, $ldapSH);
-		$Photo = ldap_get_values_len($ldapConn, $E, "jpegphoto");
-		$Photo = $Photo[0];
-	} */
 }
 else {
 	$NumResults = -1;
@@ -301,7 +284,7 @@ $request = mangle_query(array(
 	'style' => $Stylesheets[$nextstyle % count($Stylesheets)],
 	));
 ?>
-<a href="?<?php echo htmlspecialchars($request) ?>" style="color: black">a small clicky link</a> | grawity, 2009</p>
+<a href="?<?php echo htmlspecialchars($request) ?>">switch style</a> | <a href="http://purl.oclc.org/NET/grawity/">grawity</a>, 2010</p>
 
 </body>
 </html>
