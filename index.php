@@ -87,7 +87,7 @@ if (isset($_GET["style"])) {
 	parse_str($_SERVER["QUERY_STRING"], $request);
 	unset($request["style"]);
 	$request = http_build_query($request);
-	header("Location: {$request}");
+	header("Location: /{$request}");
 	unset($request);
 }
 elseif (isset($_COOKIE["style"])) {
