@@ -270,7 +270,7 @@ else {
 }
 ?>
 
-<p class="footer"><?php
+<p class="footer"><a href="http://github.com/cluenet/ldapsearch">source</a> | <?php
 $nextstyle = array_search($Style, $Stylesheets, true);
 $nextstyle++;
 
