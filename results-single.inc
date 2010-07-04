@@ -84,6 +84,11 @@ if (has('openid') and
 ?>
 
 <div id="title">
+<span style="float: left; margin-right: 5px">
+        <img src="getphoto.php?uid=<?php echo $uid ?>"
+                alt="Photo of <?php echo $uid ?>"
+                style="width: 64px; height: 64px">
+</span>
 <?php if ($Name) {
 	echo "<h1>{$Name}</h1>\n";
 	if (strtolower($Name) != strtolower($uid))
@@ -93,7 +98,7 @@ else {
 	echo "<h1>{$uid}</h1>\n";
 } ?>
 </div>
-
+<div style="clear: both;"></div>
 <div class="box navigation"> <!-- view bar -->
 <p>
 view:

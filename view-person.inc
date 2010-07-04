@@ -1,11 +1,6 @@
 <!-- BEGIN view/person -->
 <?php $Moar = ($View == "person"); ?>
 <div class="box content">
-<span style="float: left; margin-right: 5px">
-	<img src="getphoto.php?uid=<?php echo $uid ?>"
-		alt="Photo of <?php echo $uid ?>"
-		style="width: 64px; height: 64px">
-</span>
 <h2>Personal</h2>
 <p>
 	<span class="label">Real name:</span>
