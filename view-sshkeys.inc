@@ -17,7 +17,7 @@ function snipOptions($key) {
 }
 
 foreach ($Entry["cluesshpubkey"] as $key):
-$info = snipOptions($e);
+$info = snipOptions($key);
 
 if ($info === false)
 	echo "<h3 class=\"error\">invalid key</h3>\n";
