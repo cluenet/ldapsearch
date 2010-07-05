@@ -34,5 +34,18 @@ if ($values === false) {
 
 ldap_unbind($conn);
 
-header("Content-Type: image/jpeg");
-print $values[0];
+$tag = sprintf("\"%08x\"", crc32($values[0]));
+
+if (isset($_SERVER['HTTP_IF_NONE_MATCH'])
+	and $tag == $_SERVER['HTTP_IF_NONE_MATCH']) {
+	header("HTTP/1.0 304");
+	header("Status: 304");
+	header("Content-Length: 0");
+	die;
+}
+else {
+	header("Etag: {$tag}");
+	header("Content-Type: image/jpeg");
+	header("Content-Length: ".strlen($values[0]));
+	print $values[0];
+}
