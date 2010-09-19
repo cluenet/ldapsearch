@@ -3,9 +3,38 @@ include "config.inc";
 include "functions.inc";
 
 function no_jpegphoto() {
+	$search = ldap_search($conn,
+		"ou=people,".BASE_DN,
+		"(uid={$uid})",
+		array("mail"),
+		false,
+		0);
+
+	if (ldap_count_entries($conn, $search) != 1) {
+		header("{$_SERVER["SERVER_PROTOCOL"]} 404");
+		header("Location: http://wiki.xkcd.com/wirc/images/Bucket.png");
+		die("User not found");
+	}
+
+	$entry = ldap_first_entry($conn, $search);
+	$values = ldap_get_values_len($conn, $entry, "mail");
+	if ($values === false) {
+		header("{$_SERVER["SERVER_PROTOCOL"]} 404");
+		header("Location: http://wiki.xkcd.com/wirc/images/Bucket.png");
+		die("User not found");
+	}
+	
+	//$values[0] is an email address
+	//try getting a gravatar/identicon, SO-style
+	
+	$email = trim($values[0]);
+	$email = strtolower($email);
+	$email = md5($email);
+	$url = 'http://www.gravatar.com/avatar/' . $email . '?d=identicon';
+	
 	header("{$_SERVER["SERVER_PROTOCOL"]} 404");
-	header("Location: http://wiki.xkcd.com/wirc/images/Bucket.png");
-	die("User not found");
+	header("Location: $url");
+	die("Sending gravatar");
 }
 
 $conn = ldap_connect_and_do_things();
