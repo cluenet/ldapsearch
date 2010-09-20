@@ -46,7 +46,7 @@ $uid = $_GET["uid"];
 $search = @ldap_read($conn, "uid={$uid},ou=people,".BASE_DN,
 	"(objectClass=*)", array("jpegphoto", "mail"), false, 0);
 
-if (!$results) {
+if (!$search) {
 	// user entry for $uid not found
 	die("User not found\n");
 }
