@@ -2,39 +2,36 @@
 include "config.inc";
 include "functions.inc";
 
-function no_jpegphoto($jpegphotoerror) {
-	$search = ldap_search($conn,
-		"ou=people,".BASE_DN,
-		"(uid={$uid})",
-		array("mail"),
-		false,
-		0);
+function do_jpegphoto(&$photo) {
+	$tag = sprintf("\"%08x\"", crc32($photo));
 
-	if (ldap_count_entries($conn, $search) != 1) {
-		header("{$_SERVER["SERVER_PROTOCOL"]} 404");
-		header("Location: http://wiki.xkcd.com/wirc/images/Bucket.png");
-		die("jpegphoto not found: {$jpegphotoerror}. mail not found: ".ldap_error($conn).".");
+	// check if client has the ETag
+	if (isset($_SERVER['HTTP_IF_NONE_MATCH'])
+		and $tag == $_SERVER['HTTP_IF_NONE_MATCH']) {
+		header("{$_SERVER["SERVER_PROTOCOL"]} 304");
+		header("Status: 304");
+		header("Content-Length: 0");
 	}
+	else {
+		header("Etag: {$tag}");
+		header("Content-Type: image/jpeg");
+		header("Content-Length: ".strlen($photo));
+		print $photo;
+	}
+}
 
-	$entry = ldap_first_entry($conn, $search);
-	$values = ldap_get_values($conn, $entry, "mail");
-	if ($values === false) {
-		header("{$_SERVER["SERVER_PROTOCOL"]} 404");
-		header("Location: http://wiki.xkcd.com/wirc/images/Bucket.png");
-		die("jpegphoto not found: {$jpegphotoerror}. mail is false: ".ldap_error($conn).".");
-	}
-	
-	//$values[0] is an email address
-	//try getting a gravatar/identicon, SO-style
-	
-	$email = trim($values[0]);
-	$email = strtolower($email);
-	$email = md5($email);
-	$url = 'http://www.gravatar.com/avatar/' . $email . '?d=identicon';
-	
-	header("{$_SERVER["SERVER_PROTOCOL"]} 302");
-	header("Location: $url");
-	die("Sending gravatar");
+function do_bucket() {
+	header("{$_SERVER["SERVER_PROTOCOL"]} 404");
+	header("Location: http://wiki.xkcd.com/wirc/images/Bucket.png");
+}
+
+function do_gravatar($mail) {
+	echo "D: mail = "; var_dump($mail);
+	$hash = md5(strtolower(trim($mail)));
+	echo "D: hash = "; var_dump($hash);
+	$url = "http://www.gravatar.com/avatar/{$hash}?d=identicon";
+	echo "D: aurl = "; var_dump($url);
+	//header("Location: $url");
 }
 
 $conn = ldap_connect_and_do_things();
@@ -46,37 +43,32 @@ if (!$conn) {
 
 $uid = $_GET["uid"];
 
-$search = ldap_search($conn,
-	"ou=people,".BASE_DN,
-	"(uid={$uid})",
-	array("jpegphoto"),
-	false,
-	0);
+$search = @ldap_read($conn, "uid={$uid},ou=people,".BASE_DN,
+	"(objectClass=*)", array("jpegphoto", "mail"), false, 0);
 
-if (ldap_count_entries($conn, $search) != 1) {
-	no_jpegphoto(ldap_error($conn));
+if (!$results) {
+	// user entry for $uid not found
+	die("User not found\n");
 }
 
 $entry = ldap_first_entry($conn, $search);
-$values = ldap_get_values_len($conn, $entry, "jpegphoto");
-if ($values === false) {
-	no_jpegphoto(ldap_error($conn));
+
+$photo = ldap_get_values_len($conn, $entry, "jpegphoto");
+if ($photo !== false) {
+	header("X-Debug: has \$photo", false);
+	ldap_unbind($conn);
+	do_jpegphoto($photo[0]);
+	die;
+}
+
+$mail = ldap_get_values($conn, $entry, "mail");
+if ($mail !== false) {
+	header("X-Debug: has \$mail = {$mail[0]}", false);
+	ldap_unbind($conn);
+	do_gravatar($mail[0]);
+	die;
 }
 
 ldap_unbind($conn);
-
-$tag = sprintf("\"%08x\"", crc32($values[0]));
-
-if (isset($_SERVER['HTTP_IF_NONE_MATCH'])
-	and $tag == $_SERVER['HTTP_IF_NONE_MATCH']) {
-	header("HTTP/1.0 304");
-	header("Status: 304");
-	header("Content-Length: 0");
-	die;
-}
-else {
-	header("Etag: {$tag}");
-	header("Content-Type: image/jpeg");
-	header("Content-Length: ".strlen($values[0]));
-	print $values[0];
-}
+do_bucket();
+die;
