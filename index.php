@@ -278,7 +278,7 @@ $request = mangle_query(array(
 	'style' => $Stylesheets[$nextstyle % count($Stylesheets)],
 	));
 ?>
-<a href="?<?php echo htmlspecialchars($request) ?>">switch style</a> | <a href="http://purl.oclc.org/NET/grawity/">grawity</a>, 2010</p>
+<a href="?<?php echo htmlspecialchars($request) ?>">switch style</a> | <a href="http://github.com/cluenet/ldapsearch">Cluenet</a></p>
 
 </body>
 </html>
