@@ -26,12 +26,9 @@ function do_bucket() {
 }
 
 function do_gravatar($mail) {
-	echo "D: mail = "; var_dump($mail);
 	$hash = md5(strtolower(trim($mail)));
-	echo "D: hash = "; var_dump($hash);
 	$url = "http://www.gravatar.com/avatar/{$hash}?d=identicon";
-	echo "D: aurl = "; var_dump($url);
-	//header("Location: $url");
+	header("Location: $url");
 }
 
 $conn = ldap_connect_and_do_things();
