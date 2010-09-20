@@ -84,7 +84,7 @@ $AllPrivileges = array(
 	'chfn'       => array( 2, PRIV_DEPRECATED."chfn" ),
 	'chsh'       => array( 2, PRIV_DEPRECATED."chsh" ),
 	
-	'mail'       => array( 0, "Cluenet.org mail" ),
+	'mail'       => array( 2, PRIV_OBSOLETE."Cluenet.org mail" ),
 	'wiki'       => array( 2, "wiki" ),
 	'forum'      => array( 2, PRIV_OBSOLETE."<a href=\"http://forum.cluenet.org/\">forum</a>" ),
 	'bugs'       => array( 2, "Bugzilla" ),
