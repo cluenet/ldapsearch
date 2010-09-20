@@ -13,7 +13,7 @@ function no_jpegphoto() {
 	if (ldap_count_entries($conn, $search) != 1) {
 		header("{$_SERVER["SERVER_PROTOCOL"]} 404");
 		header("Location: http://wiki.xkcd.com/wirc/images/Bucket.png");
-		die("User not found");
+		die("jpegphoto/mail not found");
 	}
 
 	$entry = ldap_first_entry($conn, $search);
@@ -21,7 +21,7 @@ function no_jpegphoto() {
 	if ($values === false) {
 		header("{$_SERVER["SERVER_PROTOCOL"]} 404");
 		header("Location: http://wiki.xkcd.com/wirc/images/Bucket.png");
-		die("User not found");
+		die("jpegphoto not found/is false, mail is false");
 	}
 	
 	//$values[0] is an email address
