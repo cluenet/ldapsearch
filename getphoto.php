@@ -32,7 +32,7 @@ function no_jpegphoto($jpegphotoerror) {
 	$email = md5($email);
 	$url = 'http://www.gravatar.com/avatar/' . $email . '?d=identicon';
 	
-	header("{$_SERVER["SERVER_PROTOCOL"]} 404");
+	header("{$_SERVER["SERVER_PROTOCOL"]} 302");
 	header("Location: $url");
 	die("Sending gravatar");
 }
