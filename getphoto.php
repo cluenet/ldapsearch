@@ -2,7 +2,7 @@
 include "config.inc";
 include "functions.inc";
 
-function no_jpegphoto() {
+function no_jpegphoto($jpegphotoerror) {
 	$search = ldap_search($conn,
 		"ou=people,".BASE_DN,
 		"(uid={$uid})",
@@ -13,15 +13,15 @@ function no_jpegphoto() {
 	if (ldap_count_entries($conn, $search) != 1) {
 		header("{$_SERVER["SERVER_PROTOCOL"]} 404");
 		header("Location: http://wiki.xkcd.com/wirc/images/Bucket.png");
-		die("jpegphoto/mail not found");
+		die("jpegphoto not found: {$jpegphotoerror}. mail not found: ".ldap_error());
 	}
 
 	$entry = ldap_first_entry($conn, $search);
-	$values = ldap_get_values_len($conn, $entry, "mail");
+	$values = ldap_get_values($conn, $entry, "mail");
 	if ($values === false) {
 		header("{$_SERVER["SERVER_PROTOCOL"]} 404");
 		header("Location: http://wiki.xkcd.com/wirc/images/Bucket.png");
-		die("jpegphoto not found/is false, mail is false");
+		die("jpegphoto not found: {$jpegphotoerror}. mail is false: ".ldap_error());
 	}
 	
 	//$values[0] is an email address
@@ -54,13 +54,13 @@ $search = ldap_search($conn,
 	0);
 
 if (ldap_count_entries($conn, $search) != 1) {
-	no_jpegphoto();
+	no_jpegphoto(ldap_error());
 }
 
 $entry = ldap_first_entry($conn, $search);
 $values = ldap_get_values_len($conn, $entry, "jpegphoto");
 if ($values === false) {
-	no_jpegphoto();
+	no_jpegphoto(ldap_error());
 }
 
 ldap_unbind($conn);
