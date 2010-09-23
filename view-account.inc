@@ -78,3 +78,16 @@
 </p>
 <?php endif; ?>
 </div>
+
+<div class="box">
+<p>
+	<span class="label">Created:</span>
+	<span class="value important"><?php echo strftime("%Y-%m-%d %H:%M", $Entry["createTimestamp"]); ?></span>
+</p>
+
+<p>
+	<span class="label">Modified:</span>
+	<span class="value"><?php echo strftime("%Y-%m-%d %H:%M", $Entry["modifyTimestamp"]); ?>
+		by <code><?php echo htmlspecialchars($OpEntry["modifiersName"][0]); ?></code></span>
+</p>
+</div>

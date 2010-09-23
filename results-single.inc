@@ -32,7 +32,7 @@ $user_dn = "uid={$uid},ou=people,dc=cluenet,dc=org";
 
 ///// Retrieve some more attributes
 $search = @ldap_read($ldapConn, $user_dn, "objectClass=*",
-	array("createTimestamp", "modifyTimestamp"), null, 0);
+	array("createTimestamp", "modifyTimestamp", "modifiersName"), null, 0);
 $res = ldap_first_entry($ldapConn, $search);
 $OpEntry = ldap_get_attributes($ldapConn, $res);
 $Entry["createTimestamp"] = strptime_sane($OpEntry["createTimestamp"][0], "%Y%m%d%H%M%SZ");
