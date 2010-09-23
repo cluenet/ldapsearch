@@ -82,14 +82,13 @@
 <?php if ($Moar): ?>
 <div class="box">
 <p>
-	<span class="label">Created:</span>
+	<span class="label">Entry created:</span>
+<?php if ($Entry["createTimestamp"] > 1207008000): ?>
 	<span class="value important"><?php echo strftime("%Y-%m-%d %H:%M", $Entry["createTimestamp"]); ?></span>
-</p>
-
-<p>
-	<span class="label">Modified:</span>
-	<span class="value"><?php echo strftime("%Y-%m-%d %H:%M", $Entry["modifyTimestamp"]); ?>
-		by <code><?php echo htmlspecialchars($OpEntry["modifiersName"][0]); ?></code></span>
+<?php else: ?>
+	<span class="value"><?php echo strftime("%Y-%m-%d %H:%M", $Entry["createTimestamp"]); ?></span>
+	<strong>(mass-import; actual date joined unknown)</strong>
+<?php endif; ?>
 </p>
 </div>
 <?php endif; ?>
