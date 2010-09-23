@@ -26,11 +26,7 @@ $HasShell = isset($Privileges['ssh']) or isset($Privileges['sshd']);
 $Errors = array();
 $Invalid = array();
 
-if (has('uid')) $uid = $Entry['uid'];
-else {
-	$uid = "Anonymous Coward";
-	$Errors[] = "<strong>user doesn't have a user name</strong> (<code>uid</code>)";
-}
+$uid = $Entry['uid']; // todo: get rid of $uid
 
 $user_dn = "uid={$uid},ou=people,dc=cluenet,dc=org";
 
@@ -42,25 +38,8 @@ $OpEntry = ldap_get_attributes($ldapConn, $res);
 $Entry["createTimestamp"] = strptime_sane($OpEntry["createTimestamp"][0], "%Y%m%d%H%M%SZ");
 $Entry["modifyTimestamp"] = strptime_sane($OpEntry["modifyTimestamp"][0], "%Y%m%d%H%M%SZ");
 
-if (isset($uid) and strtolower($uid) == "fahad") {
-	;# $Errors[] = "<strong>user is an asshat</strong>";
-}
-
-if (has('uidnumber'))
-	$Entry['uidnumber'] = intval($Entry['uidnumber']);
-else
-	$Errors[] = "<strong>doesn't have an UID</strong> (<code>uidNumber</code>)";
-
-if (has('uidnumber') and $Entry['uidnumber'] < 25000)
-	$Errors[] = "<strong>UID is less than 25000</strong> (<code>uidNumber</code>)";
-
-if (has('gidnumber'))
-	$Entry['gidnumber'] = intval($Entry['gidnumber']);
-else
-	$Errors[] = "<strong>doesn't have a group ID</strong> (<code>gidNumber</code>)";
-
-if (!has('homedirectory'))
-	$Errors[] = "doesn't have a homedir (<code>homeDirectory</code>)";
+$Entry['uidnumber'] = intval($Entry['uidnumber']);
+$Entry['gidnumber'] = intval($Entry['gidnumber']);
 	
 if (isset($Entry['cn']))
 	$Name = ($Entry['cn'] != $uid)? $Entry['cn'] : false;
