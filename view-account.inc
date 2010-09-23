@@ -79,6 +79,7 @@
 <?php endif; ?>
 </div>
 
+<?php if ($Moar): ?>
 <div class="box">
 <p>
 	<span class="label">Created:</span>
@@ -91,3 +92,4 @@
 		by <code><?php echo htmlspecialchars($OpEntry["modifiersName"][0]); ?></code></span>
 </p>
 </div>
+<?php endif; ?>
