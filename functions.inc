@@ -162,11 +162,6 @@ function htmlize($in) {
 	return $in;
 }
 
-
-function gravatar($email, $maxSize = 80) {
-	return "http://www.gravatar.com/avatar/".md5($email).".jpg?s=".$maxSize;
-}
-
 function ldap_connect_and_do_things() {
 	global $SysErrors;
 	global $Auth;
