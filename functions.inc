@@ -1,6 +1,18 @@
 <?php
 # vim: ft=php
 
+// todo: handle arrays?
+function my_build_query($items) {
+	$query = array();
+	foreach ($items as $key => $value) {
+		if ($value === null)
+			$query[] = urlencode($key);
+		else
+			$query[] = urlencode($key)."=".urlencode($value);
+	}
+	return implode("&", $query);
+}
+
 function mangle_query($add, $remove=null) {
 	parse_str($_SERVER["QUERY_STRING"], $query);
 	
@@ -12,7 +24,7 @@ function mangle_query($add, $remove=null) {
 		foreach ($remove as $key)
 			unset($query[$key]);
 	
-	return http_build_query($query);
+	return my_build_query($query);
 }
 
 function fixEntry($entry) {

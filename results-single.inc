@@ -32,6 +32,8 @@ else {
 	$Errors[] = "<strong>user doesn't have a user name</strong> (<code>uid</code>)";
 }
 
+$user_dn = "uid={$uid},ou=people,dc=cluenet,dc=org";
+
 if (isset($uid) and strtolower($uid) == "fahad") {
 	;# $Errors[] = "<strong>user is an asshat</strong>";
 }
