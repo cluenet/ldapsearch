@@ -40,7 +40,7 @@ if (!$conn) {
 
 $uid = $_GET["uid"];
 
-$search = @ldap_read($conn, "uid={$uid},ou=people,".BASE_DN,
+$search = @ldap_read($conn, "uid={$uid},ou=people,dc=cluenet,dc=org",
 	"(objectClass=*)", array("jpegphoto", "mail"), false, 0);
 
 if (!$search) {
