@@ -27,6 +27,18 @@ function mangle_query($add, $remove=null) {
 	return my_build_query($query);
 }
 
+function strptime_sane($date, $format) {
+	$time_t = (object) strptime($date, $format);
+	return mktime(
+		$time_t->tm_hour,
+		$time_t->tm_min,
+		$time_t->tm_sec,
+		$time_t->tm_mon + 1,
+		$time_t->tm_mday,
+		$time_t->tm_year + 1900
+		);
+}
+
 function fixEntry($entry) {
 	$new = array();
 	global $SingleAttributes;

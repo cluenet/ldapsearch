@@ -156,7 +156,6 @@ do if ($Query) {
 		}
 		$NumResults = ldap_count_entries($ldapConn, $ldapSH);
 		$Entry = ldap_get_entries($ldapConn, $ldapSH);
-		ldap_unbind($ldapConn);
 	}
 } else {
 	$NumResults = -1;
