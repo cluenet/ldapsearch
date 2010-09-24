@@ -143,7 +143,7 @@ else {
 	$Query = false;
 }
 
-do if ($Query) {
+if ($Query) {
 	$NumResults = -1;
 	// and get results
 	$ldapConn = ldap_connect_and_do_things();
@@ -159,7 +159,7 @@ do if ($Query) {
 	}
 } else {
 	$NumResults = -1;
-} while (false);
+}
 
 switch ($NumResults) {
 	case -1:
