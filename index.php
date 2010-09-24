@@ -148,7 +148,7 @@ if ($Query) {
 	// and get results
 	$ldapConn = ldap_connect_and_do_things();
 	if ($ldapConn) {
-		$ldapSH = @ldap_search($ldapConn, "ou=people,dc=cluenet,dc=org", $Filter, Array(), null, 0);
+		$ldapSH = @ldap_list($ldapConn, "ou=people,dc=cluenet,dc=org", $Filter, Array(), null, 0);
 		if ($ldapSH === false) {
 			$SysErrors[] = "LDAP query failed.";
 			$NumResults = 0;
