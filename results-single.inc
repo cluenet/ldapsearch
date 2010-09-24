@@ -40,11 +40,6 @@ $Entry["modifyTimestamp"] = strptime_sane($OpEntry["modifyTimestamp"][0], "%Y%m%
 
 $Entry['uidnumber'] = intval($Entry['uidnumber']);
 $Entry['gidnumber'] = intval($Entry['gidnumber']);
-	
-if (isset($Entry['cn']))
-	$Name = ($Entry['cn'] != $uid)? $Entry['cn'] : false;
-else
-	$Errors[] = "doesn't have a common name (<code>cn</code>)";
 
 if (isset($Privileges['ssh']) xor isset($Privileges['sshd']))
 	$Errors[] = "is missing one SSH authorizedService (should have <code>ssh</code> and <code>sshd</code>";
