@@ -7,16 +7,24 @@ require "html-header.inc";
 <h1>Found <?php echo $NumResults; ?> entries.</h1>
 <ul>
 <?php
+$list = array();
+
 for ($entry = ldap_first_entry($ldapConn, $lsearch);
-	$entry;
+	$entry !== false;
 	$entry = ldap_next_entry($ldapConn, $entry)) {
 
 	$uid = ldap_get_values($ldapConn, $entry, "uid");
 	$cn = ldap_get_values($ldapConn, $entry, "cn");
 
-	echo "\t<li><a href=\"?q=".H($uid[0])."\">".H($uid[0])."</a>";
-	if ($uid[0] != $cn[0])
-		echo " <em>(".H($cn[0]).")</em>";
+	$list[$uid[0]] = $cn[0];
+}
+
+ksort($list);
+
+foreach ($list as $uid => $cn) {
+	echo "\t<li><a href=\"?q=".H($uid)."\">".H($uid)."</a>";
+	if ($uid != $cn)
+		echo " <em>(".H($cn).")</em>";
 	echo "</li>\n";
 }
 ?>
