@@ -28,6 +28,8 @@ function do_bucket() {
 function do_gravatar($mail) {
 	$hash = md5(strtolower(trim($mail)));
 	$url = "http://www.gravatar.com/avatar/{$hash}?d=identicon";
+	if (isset($_GET["s"]))
+		$url .= "&s=".$_GET["s"];
 	header("Location: $url");
 }
 

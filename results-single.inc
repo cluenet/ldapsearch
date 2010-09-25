@@ -55,12 +55,16 @@ $Title = H($Entry["uid"]);
 require "html-header.inc";
 ?>
 
+<!-- page header - name, uid, picture -->
 <div id="title">
 <span style="float: left; margin-right: 5px">
-        <img src="getphoto.php?uid=<?php echo H($Entry["uid"]) ?>"
-                alt="Photo of <?php echo H($Entry["uid"]) ?>"
-                style="width: 64px; height: 64px">
+<a href="getphoto.php?uid=<?php echo H($Entry["uid"]) ?>" style="border: none">
+	<img src="getphoto.php?uid=<?php echo H($Entry["uid"]) ?>&amp;s=56"
+		alt="Photo of <?php echo H($Entry["uid"]) ?>"
+		style="width: 56px; height: 56px; border: none">
+</a>
 </span>
+
 <?php if ($Name) {
 	echo "<h1>".H($Name)."</h1>\n";
 	if (strtolower($Name) != strtolower($Entry["uid"]))
