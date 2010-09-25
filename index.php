@@ -25,7 +25,7 @@ The source code of this application is available at:
 
 EOF;
 
-error_reporting(E_ALL | E_NOTICE);
+error_reporting(E_ALL);
 ini_set('display_errors', 1);
 date_default_timezone_set("UTC");
 @include "config.inc";

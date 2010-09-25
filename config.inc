@@ -1,7 +1,4 @@
 <?php
-define("N", "\n");
-define("T", "\t");
-
 define("USE_SSL", false);
 define("LDAP_SERVER", "ldap.cluenet.org");
 define("LDAP_PORT", USE_SSL? 636 : 389);
