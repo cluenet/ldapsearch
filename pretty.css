@@ -20,6 +20,10 @@ a.ext:after {
 	content: " »";
 }
 
+ul li {
+	line-height: 1.5em;
+}
+
 #title {
 	opacity: 0.8;
 	margin-top: 0.1em;
