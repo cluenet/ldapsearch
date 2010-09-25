@@ -85,10 +85,9 @@ if (isset($_GET["style"])) {
 	else {
 		setcookie("style", null, 0);
 	}
-
-	$request = mangle_query(null, array('style'));
-	header("Location: /?{$request}");
-	unset($request);
+	header("Location: "
+		.parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH)
+		."?".mangle_query(null, array("style")));
 }
 elseif (isset($_COOKIE["style"])) {
 	if (in_array($_COOKIE["style"], $Stylesheets)) {
