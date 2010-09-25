@@ -6,15 +6,15 @@ $command = implode(" ", array(
 	"ldapsearch",
 	"-x",
 	"-LLL",
-	"-b", escapeshellarg($user_dn),
+	"-b", escapeshellarg($Entry["dn"]),
 	"-s", "base",
 	escapeshellarg($show_props? "+" : "*"),
 	));
 ?>
 
-<h2><?php echo htmlspecialchars($user_dn); ?></h2>
+<h2><?php echo H($Entry["dn"]); ?></h2>
 
-<pre><?php echo htmlspecialchars(`$command`); ?></pre>
+<pre><?php echo H(`$command`); ?></pre>
 
 <?php
 if ($show_props) {
@@ -26,7 +26,7 @@ if ($show_props) {
 }
 ?>
 <p><small>
-	<a href="?<?php echo htmlspecialchars($new_req) ?>"><?php echo $link_text ?></a>
+	<a href="?<?php echo H($new_req) ?>"><?php echo $link_text ?></a>
 </small></p>
 
 </div>
