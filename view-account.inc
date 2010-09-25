@@ -10,7 +10,7 @@
 
 <p>	
 	<span class="label">User name:</span>
-	<span class="value important"><?php echo $uid; ?></span>
+	<span class="value important"><?php echo H($Entry["uid"]) ?></span>
 </p>
 
 <?php /*
