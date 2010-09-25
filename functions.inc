@@ -39,18 +39,29 @@ function strptime_sane($date, $format) {
 		);
 }
 
-function fixEntry($entry) {
+function ldif_parse_time($str) {
+	return strptime_sane($str, "%Y%m%d%H%M%SZ");
+}
+
+function clean_result($entry) {
 	$new = array();
 	global $SingleAttributes;
-	# unset unneeded vars
+
+	# make it a purely associative array
+	for ($i = 0; $i < $entry["count"]; $i++)
+		unset($entry[$i]);
+
 	unset($entry["count"]);
-	for ($i = 0; isset($entry[$i]); $i++) unset($entry[$i]);
-	# do st00f
+
+	# flatten value arrays if exactly one value is guaranteed	
 	foreach ($entry as $key => $values) {
-		if ($key == "dn") continue;
-		elseif (in_array($key, $SingleAttributes)) {
+		// array_change_key_case is needed after ldap_get_attributes
+		$key = strtolower($key);
+
+		if ($key == "dn")
+			continue;
+		elseif (in_array($key, $SingleAttributes))
 			$new[$key] = $values[0];
-		}
 		else {
 			unset($values["count"]);
 			$new[$key] = $values;
@@ -165,11 +176,15 @@ function condLink($cond, $title, $url) {
 }
 
 
+function H($str) {
+	return htmlspecialchars($str, ENT_COMPAT, "UTF-8");
+}
+
 // escape all HTML (recursive)
 function htmlize($in) {
 	if (is_array($in))
 		foreach ($in as $k => $v) $in[$k] = htmlize($in[$k]);
-	else
+	elseif (is_string($in))
 		$in = htmlspecialchars($in);
 	return $in;
 }

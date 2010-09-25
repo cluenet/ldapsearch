@@ -1,16 +1,19 @@
 <?php
-///// Do some preparation on the results
-$Entry = $Entry[0];
-// de-array-ize attributes which are always single-instance
-$Entry = fixEntry($Entry);
-// htmlspecialchars everything
-$Entry = htmlize($Entry);
+$res = ldap_first_entry($ldapConn, $lsearch);
+$Entry = ldap_get_attributes($ldapConn, $res);
+// do some preparations on the result
+$Entry = clean_result($Entry);
+#$Entry = htmlize($Entry);
+$Entry["dn"] = ldap_get_dn($ldapConn, $res);
 
-///// Begin doing things
+// retrieve operational attributes
+$lsearch = @ldap_read($ldapConn, $Entry["dn"], "objectClass=*",
+	array("createTimestamp"), null, 0);
+$res = ldap_first_entry($ldapConn, $lsearch);
+$entry_op = ldap_get_attributes($ldapConn, $res);
+$Entry["createTimestamp"] = ldif_parse_time($entry_op["createTimestamp"][0]);
 
-$IsSuspended = array_search('suspendedUser', $Entry['objectclass']) !== false;
-
-// build an array of privileges (already flipped)
+// build an array of privileges
 $Privileges = array();
 if (isset($Entry['authorizedservice']))
 	foreach ($Entry['authorizedservice'] as $k => $v)
@@ -22,27 +25,15 @@ ksort($Privileges);
 
 $HasShell = isset($Privileges['ssh']) or isset($Privileges['sshd']);
 
+$IsSuspended = array_search('suspendedUser', $Entry['objectclass']) !== false;
+
 ///// Check for errors in LDAP entry
 $Errors = array();
 $Invalid = array();
 
-$uid = $Entry['uid']; // todo: get rid of $uid
-
-$user_dn = "uid={$uid},ou=people,dc=cluenet,dc=org";
-
-///// Retrieve some more attributes
-$search = @ldap_read($ldapConn, $user_dn, "objectClass=*",
-	array("createTimestamp", "modifyTimestamp", "modifiersName"), null, 0);
-$res = ldap_first_entry($ldapConn, $search);
-$OpEntry = ldap_get_attributes($ldapConn, $res);
-$Entry["createTimestamp"] = strptime_sane($OpEntry["createTimestamp"][0], "%Y%m%d%H%M%SZ");
-$Entry["modifyTimestamp"] = strptime_sane($OpEntry["modifyTimestamp"][0], "%Y%m%d%H%M%SZ");
-
+$Name = ($Entry["cn"] != $Entry["uid"]) ? $Entry["cn"] : false;
 $Entry['uidnumber'] = intval($Entry['uidnumber']);
 $Entry['gidnumber'] = intval($Entry['gidnumber']);
-
-if (isset($Privileges['ssh']) xor isset($Privileges['sshd']))
-	$Errors[] = "is missing one SSH authorizedService (should have <code>ssh</code> and <code>sshd</code>";
 
 if (!has('krb5principalname'))
 	$Errors[] = "is missing a Kerberos principal (<code>krb5PrincipalName</code>)";
@@ -53,9 +44,6 @@ if ($HasShell and !has('clueircnick'))
 if (has('pgpkeyid') and !preg_match("/^(0x)?([0-9a-z]{8}){1,2}$/i", $Entry['pgpkeyid']))
 	$Errors[] = "incorrect PGP key ID format";
 
-if (!isset($Privileges['wiki']))
-	$Errors[] = "doesn't have ClueWiki access";
-
 if (has('openid') and
 	!(substr($Entry['openid'], 0, 7) == "http://"
 	or substr($Entry['openid'], 0, 8) == "https://")) {
@@ -63,57 +51,68 @@ if (has('openid') and
 	$Invalid["openid"] = true;
 }
 
-
-
+$Title = H($Entry["uid"]);
+require "html-header.inc";
 ?>
 
 <div id="title">
 <span style="float: left; margin-right: 5px">
-        <img src="getphoto.php?uid=<?php echo $uid ?>"
-                alt="Photo of <?php echo $uid ?>"
+        <img src="getphoto.php?uid=<?php echo H($Entry["uid"]) ?>"
+                alt="Photo of <?php echo H($Entry["uid"]) ?>"
                 style="width: 64px; height: 64px">
 </span>
 <?php if ($Name) {
-	echo "<h1>{$Name}</h1>\n";
-	if (strtolower($Name) != strtolower($uid))
-		echo "<div id=\"realname\">{$uid}</div>\n";
-}
-else {
-	echo "<h1>{$uid}</h1>\n";
+	echo "<h1>".H($Name)."</h1>\n";
+	if (strtolower($Name) != strtolower($Entry["uid"]))
+		echo "<div id=\"realname\">".H($Entry["uid"])."</div>\n";
+} else {
+	echo "<h1>".H($Entry["uid"])."</h1>\n";
 } ?>
 </div>
 <div style="clear: both;"></div>
-<div class="box navigation"> <!-- view bar -->
+
+<!-- view bar -->
+<div class="box navigation">
 <p>
-view:
-   <?php echo condLink($View == "info", "info", '?q='.urlencode($Query));?>
- | <?php echo condLink($View == "account", "account", '?q='.urlencode($Query)."&view=account");?>
- | <?php echo condLink($View == "person", "personal", '?q='.urlencode($Query)."&view=person");?>
- | <?php echo condLink($View == "contact", "contact", '?q='.urlencode($Query)."&view=contact");?>
- | <?php echo condLink($View == "access", "access", '?q='.urlencode($Query)."&view=access");?>
-<?php if (has('cluesshpubkey')): ?>
- | <?php echo condLink($View == "sshkeys", "SSH public keys", '?q='.urlencode($Query)."&view=sshkeys"); ?> (<?php echo count($Entry['cluesshpubkey']); ?>)
-<?php endif; ?>
- | <?php echo condLink($View == "ldif", "LDIF", '?q='.urlencode($Query)."&view=ldif");?>
+View:
+<?php
+echo condLink($View == "info", "info", "?q=".urlencode($Query))."\n";
+echo "| ".condLink($View == "account", "account", '?q='.urlencode($Query)."&view=account")."\n";
+echo "| ".condLink($View == "person", "personal", '?q='.urlencode($Query)."&view=person")."\n";
+echo "| ".condLink($View == "contact", "contact", '?q='.urlencode($Query)."&view=contact")."\n";
+echo "| ".condLink($View == "access", "access", '?q='.urlencode($Query)."&view=access")."\n";
+if (has('cluesshpubkey'))
+	echo "| ".condLink($View == "sshkeys", "SSH keys", '?q='.urlencode($Query)."&view=sshkeys")
+		." (".count($Entry['cluesshpubkey']).")\n";
+echo "| ".condLink($View == "ldif", "raw entry", '?q='.urlencode($Query)."&view=ldif");
+?>
 </p>
 </div>
 
 <?php if (count($Errors) > 0): ?>
-<div class="box content"> <!-- errors -->
+<!-- error box -->
+<div class="box content">
 <h2 class="error">Errors, warnings and other unimportant stuff</h2>
 <ul>
-<?php foreach ($Errors as $msg) echo "<li>".$msg."</li>\n"; ?>
+<?php foreach ($Errors as $msg)
+	echo "<li>".$msg."</li>\n"; ?>
 </ul>
 </div>
 <?php endif; ?>
 
 <?php
-if ($View == "info") { include "view-info.inc"; }
-if ($View == "account") { include "view-account.inc"; }
-if ($View == "person") { include "view-person.inc"; }
-if ($View == "contact") { include "view-contact.inc"; }
-if ($View == "access") { include "view-access.inc"; }
-if ($View == "servaccess") { include "view-serveraccess.inc"; }
-if ($View == "ldif") { include "view-ldif.inc"; }
-if ($View == "sshkeys") { include "view-sshkeys.inc"; }
+switch ($View) {
+case "info":
+case "account":
+case "person":
+case "contact":
+case "access":
+case "serveraccess":
+case "ldif":
+case "sshkeys":
+	require "view-{$View}.inc";
+	break;
+}
+
+require "html-footer.inc";
 ?>

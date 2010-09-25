@@ -145,138 +145,31 @@ else {
 
 if ($Query) {
 	$NumResults = -1;
-	// and get results
 	$ldapConn = ldap_connect_and_do_things();
 	if ($ldapConn) {
-		$ldapSH = @ldap_list($ldapConn, "ou=people,dc=cluenet,dc=org", $Filter, Array(), null, 0);
-		if ($ldapSH === false) {
+		$lsearch = @ldap_list($ldapConn, "ou=people,dc=cluenet,dc=org", $Filter, Array(), null, 0);
+		if ($lsearch === false) {
 			$SysErrors[] = "LDAP query failed.";
 			$NumResults = 0;
-			break;
+		} else {
+			$NumResults = ldap_count_entries($ldapConn, $lsearch);
 		}
-		$NumResults = ldap_count_entries($ldapConn, $ldapSH);
-		$Entry = ldap_get_entries($ldapConn, $ldapSH);
 	}
 } else {
 	$NumResults = -1;
 }
 
 switch ($NumResults) {
-	case -1:
-		$Title = "";
-		break;
-	case 0:
-		$Title = "Nothing found";
-		break;
-	case 1:
-		$Title = htmlspecialchars($Entry[0]["uid"][0]);
-		break;
-	default:
-		$Title = $NumResults." results";
+case -1:
+	require "welcome.inc";
+	break;
+case 0:
+	require "results-none.inc";
+	break;
+case 1:
+	require "results-single.inc";
+	break;
+default:
+	require "results-list.inc";
+	break;
 }
-if ($Title != "") $Title .= " - ";
-
-?>
-<!DOCTYPE html>
-<html>
-<?php echo "<!--\n{$LICENSE}\n-->\n"; ?>
-<head>
-	<meta http-equiv="Content-Type" content="text/plain; charset=utf-8">
-	<title><?php echo $Title; ?>ClueLDAP</title>
-	<meta name="author" content="Mantas Mikulėnas">
-	<style>
-	pre, code {
-		font-family: Consolas, "DejaVu Mono", monospace;
-	}
-
-	.value.important {
-		font-weight: bold;
-	}
-	.comment {
-		font-style: italic;
-	}
-	.value.error {
-		color: red;
-	}
-	.value.empty {
-		font-style: italic;
-	}
-	</style>
-<?php foreach ($Stylesheets as $s):
-	$rel = ($s == $Style)? "stylesheet" : "alternate stylesheet";
-	echo "\t <link rel=\"{$rel}\" href=\"{$s}.css\" title=\"{$s}\">\n";
-endforeach; ?>
-</head>
-<body>
-
-<?php if ($NumResults > -1): ?>
-<!-- SEARCH BAR -->
-<div class="box">
-<form id="searchbar" method="get" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
-	<div>
-		<input type="text" name="q" id="q" value="<?php echo $Query? htmlspecialchars($Query) : ""; ?>" />
-		<input type="submit" value="search &gt;&gt;" />
-	</div>
-</form>
-
-<?php if (isset($Auth) and $Auth): ?>
-<p style="font-size: small; font-style: italic;">Logged in as <strong><?php echo substr($Auth, 0, strpos($Auth, "@")); ?></strong></p>
-<?php endif; ?>
-</div>
-<?php endif; ?>
-
-
-<?php if (count($SysErrors) > 0): ?>
-<div class="box">
-<h2 class="error">Bad things happened</h2>
-<ul>
-<?php foreach ($SysErrors as $msg) echo "\t<li>{$msg}</li>\n"; ?>
-</ul>
-</div>
-<?php endif; ?>
-
-<?php if (isset($_GET["chewy"])): ?>
-<div class="box">
-<pre>
-$View = <?php var_dump($View); ?>
-$Auth = <?php var_dump($Auth); ?>
-
-C:\&gt;<blink>_</blink>
-</pre>
-</div>
-<?php endif; ?>
-
-<?php
-if ($NumResults == -1) {
-	include "welcome.inc";
-}
-
-elseif ($NumResults == 0) {
-?>
-<div class="box">
-<h1>Not found.</h1>
-</div>
-<?php
-}
-
-elseif ($NumResults == 1) {
-	include "results-single.inc";
-}
-
-else {
-	include "results-list.inc";
-}
-?>
-
-<p class="footer"><a href="http://github.com/cluenet/ldapsearch">source</a> | <?php
-$nextstyle = array_search($Style, $Stylesheets, true);
-$nextstyle++;
-
-$request = mangle_query(array(
-	'style' => $Stylesheets[$nextstyle % count($Stylesheets)],
-	));
-?>
-<a href="?<?php echo htmlspecialchars($request) ?>">switch style</a> | <a href="http://www.cluenet.org/">Cluenet</a></p>
-
-</body>
-</html>
