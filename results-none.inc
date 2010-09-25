@@ -1,4 +1,7 @@
-<?php require "html-header.inc"; ?>
+<?php
+$Title = "";
+require "html-header.inc";
+?>
 
 <h2>Nothing found.</h2>
 

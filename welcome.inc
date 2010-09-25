@@ -1,20 +1,27 @@
-<div class="box">
-<h1>ldapsearch<sup>2½</sup></h1>
+<?php
+$Title = "";
+require "html-header.inc";
+?>
 
-<p>
+<!-- big search box -->
+<div class="box">
+<h1>ldapsearch<sup>2¾</sup></h1>
+
 <form id="searchbar" method="get" action="./">
-	<p><input type="text" style="font-size: x-large; width: 99%;" name="q" id="q" value="<?php echo $Query? $Query : ""; ?>" /></p>
-	<p><input type="submit" value="search &gt;&gt;" /></p>
+	<p><input type="text" name="q" id="q"
+		style="font-size: x-large; width: 99%;"
+		value="<?php echo H($Query) ?>"></p>
+	<p><input type="submit" value="search &gt;&gt;"></p>
 </form>
 </div>
 
+<!-- introductory text -->
 <div class="box content">
-<p>If you want to search for an IRC nick, prefix it with &quot;irc:&quot;.<br />
-Example: <code>irc:methecooldude</code></p>
+<p>If you want to search for an IRC nick, prefix it with "<samp>irc:</samp>" This also works for IM addreses and pretty much all LDAP attributes.</p>
 
-<p>This also works for XMPP/MSN/AIM addreses and some other things.</p>
-
-<p>You can also enter LDAP filters like this:<br />
-<code>(authorizedService=vpn)</code></p>
+<p>You can also enter LDAP filters:<br>
+<samp>(authorizedService=vpn)</samp></p>
 </p>
 </div>
+
+<?php require "html-footer.inc"; ?>
