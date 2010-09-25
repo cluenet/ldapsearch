@@ -1,4 +1,4 @@
-<?php $Moar = ($View == "account"); ?>
+<?php $More = ($View == "account"); ?>
 <div class="box">
 <h2>Account</h2>
 
@@ -25,7 +25,7 @@
 <?php endif; ?>
 */ ?>
 
-<?php if ($Moar and $HasShell): ?>
+<?php if ($More and $HasShell): ?>
 <p>	
 	<span class="label">Login shell:</span>
 	<?php if (isset($Entry["loginshell"])): ?>
@@ -36,42 +36,42 @@
 </p>
 <?php endif; ?>
 
-<?php if ($Moar and isset($Entry["homedirectory"])): ?>
+<?php if ($More and isset($Entry["homedirectory"])): ?>
 <p>
 	<span class="label">Home directory:</span>
 	<span class="value"><?php echo $Entry["homedirectory"]; ?></span>
 </p>
 <?php endif; ?>
 
-<?php if ($Moar and isset($Entry["uidnumber"])): ?>
+<?php if ($More and isset($Entry["uidnumber"])): ?>
 <p>	
 	<span class="label">UID:</span>
 	<span class="value important"><?php echo $Entry["uidnumber"]; ?></span>
 </p>
 <?php endif; ?>
 	
-<?php if ($Moar and isset($Entry["gidnumber"])): ?>
+<?php if ($More and isset($Entry["gidnumber"])): ?>
 <p>
 	<span class="label">GID:</span>
 	<span class="value"><?php echo $Entry["gidnumber"]; ?></span>
 </p>
 <?php endif; ?>
 	
-<?php if ($Moar and isset($Entry["krb5principalname"])): ?>
+<?php if ($More and isset($Entry["krb5principalname"])): ?>
 <p>
 	<span class="label">Kerberos principal:</span>
 	<span class="value"><?php echo $Entry["krb5principalname"]; ?></span>
 </p>
 <?php endif; ?>
 	
-<?php if ($Moar and isset($Entry["timezone"])): ?>
+<?php if ($More and isset($Entry["timezone"])): ?>
 <p>
 	<span class="label">Timezone:</span>
 	<span class="value"><?php echo $Entry["timezone"]; ?></span>
 </p>
 <?php endif; ?>
 	
-<?php if ($Moar and isset($Entry["mailquota"])): ?>
+<?php if ($More and isset($Entry["mailquota"])): ?>
 <p>
 	<span class="label">Mail quota:</span>
 	<span class="value"><?php echo formatQuota($Entry["mailquota"]); ?></span>
@@ -79,7 +79,7 @@
 <?php endif; ?>
 </div>
 
-<?php if ($Moar): ?>
+<?php if ($More): ?>
 <div class="box">
 <p>
 	<span class="label">Entry created:</span>
