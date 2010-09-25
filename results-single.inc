@@ -58,11 +58,19 @@ require "html-header.inc";
 <!-- page header - name, uid, picture -->
 <div id="title">
 <span style="float: left; margin-right: 5px">
-<a href="getphoto.php?uid=<?php echo H($Entry["uid"]) ?>" style="border: none">
-	<img src="getphoto.php?uid=<?php echo H($Entry["uid"]) ?>&amp;s=56"
+<?php
+if (has("jpegphoto")) {
+	$img_url = "getphoto.php?uid=".$Entry["uid"];
+} elseif (has("mail")) {
+	$img_url = gravatar($Entry["mail"], 56, "mm");
+} else {
+	#$img_url = "http://wiki.xkcd.com/wirc/images/Bucket.png";
+	$img_url = gravatar("", 56, "mm");
+}
+?>
+	<img src="<?php echo H($img_url) ?>"
 		alt="Photo of <?php echo H($Entry["uid"]) ?>"
-		style="width: 56px; height: 56px; border: none">
-</a>
+		style="width: 56px; height: 56px">
 </span>
 
 <?php if ($Name) {

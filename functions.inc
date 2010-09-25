@@ -175,6 +175,12 @@ function condLink($cond, $title, $url) {
 	return $Link;
 }
 
+function gravatar($mail, $size=80, $default="mm") {
+	$hash = md5(strtolower(trim($mail)));
+	$url = "http://www.gravatar.com/avatar/$hash";
+	$url .= "?".http_build_query(array("s" => $size, "d" => $default));
+	return $url;
+}
 
 function H($str) {
 	return htmlspecialchars($str, ENT_COMPAT, "UTF-8");
