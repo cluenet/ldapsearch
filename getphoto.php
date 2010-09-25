@@ -41,7 +41,7 @@ if (!$conn) {
 $uid = $_GET["uid"];
 
 $search = @ldap_read($conn, "uid={$uid},ou=people,dc=cluenet,dc=org",
-	"(objectClass=*)", array("jpegphoto", "mail"), false, 0);
+	"(objectClass=*)", array("jpegphoto", "mail", "modifyTimestamp"), false, 0);
 
 if (!$search) {
 	// user entry for $uid not found
@@ -50,9 +50,14 @@ if (!$search) {
 
 $entry = ldap_first_entry($conn, $search);
 
+// time the LDAP entry was modified
+// no per-attribute mod times, but close enough
+$modtime = ldap_get_values($conn, $entry, "modifyTimestamp");
+$modtime = ldif_parse_time($modtime[0]);
+header("Last-Modified: ".date(DateTime::RFC2822, $modtime));
+
 $photo = ldap_get_values_len($conn, $entry, "jpegphoto");
 if ($photo !== false) {
-	header("X-Debug: has \$photo", false);
 	ldap_unbind($conn);
 	do_jpegphoto($photo[0]);
 	die;
@@ -60,7 +65,6 @@ if ($photo !== false) {
 
 $mail = ldap_get_values($conn, $entry, "mail");
 if ($mail !== false) {
-	header("X-Debug: has \$mail = {$mail[0]}", false);
 	ldap_unbind($conn);
 	do_gravatar($mail[0]);
 	die;
