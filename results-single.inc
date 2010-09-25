@@ -67,7 +67,7 @@ require "html-header.inc";
 
 <?php if ($Name) {
 	echo "<h1>".H($Name)."</h1>\n";
-	if (strtolower($Name) != strtolower($Entry["uid"]))
+	if ($Name != $Entry["uid"])
 		echo "<div id=\"realname\">".H($Entry["uid"])."</div>\n";
 } else {
 	echo "<h1>".H($Entry["uid"])."</h1>\n";
