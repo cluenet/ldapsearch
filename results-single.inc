@@ -13,18 +13,6 @@ $res = ldap_first_entry($ldapConn, $lsearch);
 $entry_op = ldap_get_attributes($ldapConn, $res);
 $Entry["createTimestamp"] = ldif_parse_time($entry_op["createTimestamp"][0]);
 
-// build an array of privileges
-$Privileges = array();
-if (isset($Entry['authorizedservice']))
-	foreach ($Entry['authorizedservice'] as $k => $v)
-		$Privileges[$v] = true;
-if (isset($Entry['clueauthorizedability']))
-	foreach ($Entry['clueauthorizedability'] as $k => $v)
-		$Privileges[$v] = true;
-ksort($Privileges);
-
-$HasShell = isset($Privileges['ssh']) or isset($Privileges['sshd']);
-
 $IsSuspended = array_search('suspendedUser', $Entry['objectclass']) !== false;
 
 ///// Check for errors in LDAP entry
@@ -37,9 +25,6 @@ $Entry['gidnumber'] = intval($Entry['gidnumber']);
 
 if (!has('krb5principalname'))
 	$Errors[] = "is missing a Kerberos principal (<code>krb5PrincipalName</code>)";
-
-if ($HasShell and !has('clueircnick'))
-	$Errors[] = "has SSH, but didn't set a clueIrcNick";
 
 if (has('pgpkeyid') and !preg_match("/^(0x)?([0-9a-z]{8}){1,2}$/i", $Entry['pgpkeyid']))
 	$Errors[] = "incorrect PGP key ID format";

@@ -318,4 +318,21 @@ function checkDisplaySections($attributes) {
 	return array($sections, $numHidden, $numDisplayed);
 }
 
+function implode_e($array) {
+	if (count($array) >= 2)
+		$last = array_shift($array);
+	$s = implode(", ", $array);
+	if (isset($last))
+		$s .= " and $last";
+	return $s;
+}
+
+function trim_domain($fqdn, $domain=".cluenet.org") {
+	$domain_len = strlen($domain);
+	if (substr($fqdn, -$domain_len) === $domain)
+		return substr($fqdn, 0, -$domain_len);
+	else
+		return $fqdn;
+}
+
 ?>

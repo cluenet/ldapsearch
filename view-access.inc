@@ -1,129 +1,143 @@
 <!-- BEGIN single/access -->
-<?php $Moar = ($View == "access"); ?>
-<?php if ($View == "access" and isset($Entry['host'])): ?>
-<div class="box content">
-<h2>Accessible hosts</h2>
-<ul>
 <?php
-sort($Entry['host']);
-foreach ($Entry['host'] as $host) {
-	# snip off the domain
-	if (substr($host, -strlen(".cluenet.org")) == ".cluenet.org")
-		$host = substr($host, 0, -strlen(".cluenet.org"));
+$More = ($View == "access");
+$EvenMore = $More && isset($_GET["more"]);
 
-	echo "<li>{$host}</li>\n";
-}
-?>
-</ul>
-</div>
-<?php endif; ?>
+function find_acls($user_dn) {
+	global $ldapConn;
+	$search = ldap_search($ldapConn, "ou=servers,dc=cluenet,dc=org",
+		"(&(objectClass=groupOfNames)(member=$user_dn))", array());
 
-<div class="box content">
-<h2>Access rights</h2>
-<ul>
-<?php
-function level($name) {
-	global $AllPrivileges;
-	if (isset($AllPrivileges[$name]))
-		return $AllPrivileges[$name][0];
-	else
-		return -1;
-}
+	$acls = array();
+	for ($entry = ldap_first_entry($ldapConn, $search);
+		$entry;
+		$entry = ldap_next_entry($ldapConn, $entry)) {
 
-if (!$Moar and isset($Privileges['ssh']) and isset($Privileges['sshd'])) {
-	# info view - show only one
-	unset($Privileges['sshd']);
+		# Whoever decided that $with_attrib==0 be taken as
+		# "yes, I want attributes" should be shot.
+		$dn = ldap_explode_dn(ldap_get_dn($ldapConn, $entry), true);
+		if ($dn["count"] != 6) continue; # sanity check; failed once
+
+		$acls[trim_domain($dn[2])][] = $dn[0];
+	}
+	ldap_free_result($search);
+	return $acls;
 }
 
-$numDisplay = 0;
-$unknown = array();
-$numHidden = 0;
-$numVeryHidden = 0;
+$acl_servers = find_acls($Entry["dn"]);
+ksort($acl_servers);
 
-$EvenMoar = isset($_GET["evenmoar"]);
+$acl_misc = array();
+if (has("authorizedservice"))
+	$acl_misc = array_merge($acl_misc, $Entry["authorizedservice"]);
+if (has("clueauthorizedability"))
+	$acl_misc = array_merge($acl_misc, $Entry["clueauthorizedability"]);
+sort($acl_misc);
 
-foreach (array_keys($Privileges) as $privEntry) {
-	$privType = strtok($privEntry, "^")."^";
-	$privValue = strtok(null);
-	
-	# get level and name
-	if (isset($AllPrivileges[$privEntry])) {
-		list ($level, $name) = $AllPrivileges[$privEntry];
-		
-		if ($name === null and isset($AllPrivileges[$privType])) {
-			$name = $AllPrivileges[$privType][1];
+$acl_shell = array();
+$acl_server_misc = array();
+$services_shell = array("atd", "cron", "login", "passwd", "sshd", "su", "sudo");
+foreach ($acl_servers as $host => &$services) {
+	sort($services);
+	if (array_intersect($services_shell, $services) === $services_shell) {
+		$acl_shell[] = $host;
+		$acl_server_misc[$host] = array_diff($services, $services_shell);
+	}
+}
+
+$Access = array();
+
+if (count($acl_shell)) {
+	$Access[] = "<abbr title=\"".implode(", ", $services_shell)."\">shell access</abbr>"
+		." on ".implode_e(array_map(function($x) {return "<i>$x</i>";}, $acl_shell));
+}
+
+if ($More and in_array("sshd", $acl_misc)) {
+	$Access[] = PRIV_DEPRECATED."shell access on servers still using <code>authorizedService</code>";
+}
+
+if ($More and count($acl_server_misc)) {
+	foreach ($acl_server_misc as $host => $services) {
+		if (count($services))
+			$Access[] = implode_e($services)." on <i>$host</i>";
+	}
+}
+
+const PRIV_SHOW_ALWAYS		= 0;
+const PRIV_SHOW_TAB			= 1;
+const PRIV_SHOW_DETAILED	= 2;
+const PRIV_UNKNOWN			= 3;
+
+$AccessUnknown = array();
+$AccessHidden = 0;
+
+foreach ($acl_misc as $service) {
+	$svc_type = strtok($service, "^")."^";
+	$svc_value = strtok(null);
+
+	if (isset($AllPrivileges[$service])) {
+		list ($level, $name) = $AllPrivileges[$service];
+		if ($name === null and isset($AllPrivileges[$svc_type])) {
+			$name = $AllPrivileges[$svc_type];
 		}
+	} elseif (isset($AllPrivileges[$svc_type])) {
+		list ($level, $name) = $AllPrivileges[$svc_type];
+	} else {
+		$level = PRIV_UNKNOWN;
 	}
-	elseif (isset($AllPrivileges[$privType])) {
-		list ($level, $name) = $AllPrivileges[$privType];
-	}
-	else {
-		$level = 3;
-	}
-	
-	# hide privs depending on their importance level
-	if ($level == 3) {
+
+	if ($level == PRIV_UNKNOWN) {
 		# unknown; show only in extended view of 'access'
-		if ($EvenMoar)
-			$unknown[] = $privEntry;
+		if ($EvenMore)
+			$AccessUnknown[] = $service;
 		else
-			$numVeryHidden++;
-		continue;
+			$AccessHidden++;
 	}
-	elseif ($level >= 2 and !$EvenMoar) {
+	elseif ($level >= PRIV_SHOW_DETAILED and !$EvenMore) {
 		# show only in extended view of 'access'
-		$numVeryHidden++;
-		continue;
+		if ($More) $AccessHidden++;
 	}
-	elseif ($level >= 1 and !$Moar) {
+	elseif ($level >= PRIV_SHOW_TAB and !$More) {
 		# show only in 'access' tab
-		$numHidden++;
-		continue;
-	}
-	else {
-		# show everywhere
-		$numDisplay++;
-	}
-	
-	switch ($privEntry) {
+		$AccessHidden++;
+	} else {
+
+	switch ($service) {
 	case 'mail':
 		# show quota
-		if ($Moar and isset($Entry["mailquota"]))
-			$name = "{$name} <em>(quota: ".formatQuota($Entry["mailquota"]).")</em>";
+		if ($More and isset($Entry["mailquota"]))
+			$name = "$name <em>(quota: ".formatQuota($Entry["mailquota"]).")</em>";
 		break;
-		
 	default:
-		$name = str_replace('{}', htmlspecialchars($privValue), $name);
+		$name = str_replace('{}', htmlspecialchars($svc_value), $name);
 	}
-	
-	if ($Moar) $name = "{$name} <i>(<code>{$privEntry}</code>)</i>";
-	
-	echo "\t<li>{$name}</li>\n";	
+
+	if ($More)
+		$name .= " <i>(<code>$service</code>)</i>";
+
+	$Access[] = $name;
+	}
 }
 
-foreach ($unknown as $privilege) {
-	$numDisplay++;
-	echo "\t<li><em>Unknown service: <code>{$privilege}</code></em></li>\n";
+foreach ($AccessUnknown as $service) {
+	$Access[] = "<em>Unknown service: <code>$service</code></em>";
 }
 
-if ($numDisplay == 0) {
-	if ($numHidden > 0)
-		echo "\t<li><em>Nothing to display</em></li>\n";
-	else
-		echo "\t<li><em>No privileges :(</em></li>\n";
+if (count($Access)) {
+	print "<div class=\"box content\">\n";
+	print "<h2>Access rights</h2>\n";
+	print "<ul>\n";
+	foreach ($Access as $line)
+		print "\t<li>$line</li>\n";
+	print "</ul>\n";
+	if ($AccessHidden) {
+		if ($More) {
+			$url = mangle_query(array("more" => null));
+		} else {
+			$url = mangle_query(array("view" => "access"));
+		}
+		print "<p><small><a href=\"".H($url)."\">$AccessHidden entries not shown</small></p>\n";
+	}
+	print "</div>\n";
 }
-
-echo "</ul>\n";
-
-if ($numHidden > 0) moreLink($numHidden, "access");
-
-if ($Moar and $numVeryHidden > 0)
-	echo "<p><small>Also ",
-		"<a href=\"?q=".htmlspecialchars($_GET["q"])."&amp;view=access&amp;evenmoar\" class=\"more\">",
-		($numVeryHidden == 1)? "one entry" : "{$numVeryHidden} entries",
-		"</a> that you shouldn't care about.",
-		"</small></p>\n";
-
-?>
-</div>
 
