@@ -1,14 +1,11 @@
 <?php
-define("USE_SSL", false);
-define("LDAP_SERVER", "ldap.cluenet.org");
-define("LDAP_PORT", USE_SSL? 636 : 389);
-define("BASE_DN", "dc=cluenet,dc=org");
-define("SASL_REALM", "CLUENET.ORG");
-define("BIND_DN", False);
-define("BIND_PASS", False);
+const LDAP_URI = "ldap://ldap.cluenet.org:389";
+const LDAP_STARTTLS = false;
 
-
-define("LDAP_URI", (USE_SSL?"ldaps":"ldap")."://".LDAP_SERVER.":".LDAP_PORT."/");
+const BASE_DN = "dc=cluenet,dc=org";
+const SASL_REALM = "CLUENET.ORG";
+const BIND_DN = false;
+const BIND_PASS = false;
 
 $AllWebServices = array(
 	"twitter"    => "Twitter",
