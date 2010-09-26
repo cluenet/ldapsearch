@@ -136,7 +136,7 @@ if (count($Access)) {
 		} else {
 			$url = mangle_query(array("view" => "access"));
 		}
-		print "<p><small><a href=\"".H($url)."\">$AccessHidden entries not shown</small></p>\n";
+		print "<p><small><a href=\"?".H($url)."\">$AccessHidden entries not shown</small></p>\n";
 	}
 	print "</div>\n";
 }
