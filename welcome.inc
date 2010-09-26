@@ -8,7 +8,7 @@ require "html-header.inc";
 <h1>ldapsearch<sup>2¾</sup></h1>
 
 <form id="searchbar" method="get" action="./">
-	<p><input type="text" name="q" id="q"
+	<p><input type="search" name="q" id="q"
 		style="font-size: x-large; width: 99%;"
 		value="<?php echo H($Query) ?>"></p>
 	<p><input type="submit" value="search &gt;&gt;"></p>

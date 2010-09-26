@@ -35,8 +35,8 @@ endforeach; ?>
 <div class="box">
 <form id="searchbar" method="get" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
 	<div>
-		<input type="text" name="q" id="q" value="<?php echo H($Query) ?>" />
-		<input type="submit" value="search &gt;&gt;" />
+		<input type="search" name="q" id="q" value="<?php echo H($Query) ?>" />
+		<input type="submit" value="search" />
 	</div>
 </form>
 </div>
