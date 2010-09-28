@@ -25,7 +25,7 @@
 <?php endif; ?>
 */ ?>
 
-<?php if ($More and $HasShell): ?>
+<?php if ($More): ?>
 <p>	
 	<span class="label">Login shell:</span>
 	<?php if (isset($Entry["loginshell"])): ?>
