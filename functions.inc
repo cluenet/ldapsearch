@@ -325,7 +325,7 @@ function checkDisplaySections($attributes) {
 
 function implode_e($array) {
 	if (count($array) >= 2)
-		$last = array_shift($array);
+		$last = array_pop($array);
 	$s = implode(", ", $array);
 	if (isset($last))
 		$s .= " and $last";
