@@ -139,5 +139,17 @@ if (count($Access)) {
 		print "<p><small><a href=\"?".H($url)."\">$AccessHidden entries not shown</small></p>\n";
 	}
 	print "</div>\n";
+} elseif ($More) {
+	print "<div class=\"box content\">\n";
+	print "<h2>Access rights</h2>\n";
+	print "<p>Nothing to display.</p>\n";
+	if ($AccessHidden) {
+		if ($More) {
+			$url = mangle_query(array("more" => null));
+		} else {
+			$url = mangle_query(array("view" => "access"));
+		}
+		print "<p><small><a href=\"?".H($url)."\">$AccessHidden entries not shown</small></p>\n";
+	}
+	print "</div>\n";
 }
-
