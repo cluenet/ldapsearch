@@ -65,11 +65,10 @@ define("PRIV_OBSOLETE", "<strong>(obsolete)</strong> ");
 # 1: display in "Access" tab (default)
 # 2: do not display
 $AllPrivileges = array(
-	'marriage'   => array( 1, "marriage" ),
-	'jackass'    => array( 1, "being a jackass" ),
+	'marriage'   => array( 0, "marriage" ),
 	
-	'ssh'        => array( 2, PRIV_OBSOLETE."shell access [ssh]" ),
-	'sshd'       => array( 2, PRIV_OBSOLETE."shell access [sshd]" ),
+	'ssh'        => array( 2, PRIV_OBSOLETE."SSH access (Debian Etch)" ),
+	'sshd'       => array( 2, PRIV_OBSOLETE."SSH access" ),
 	'sudo'       => array( 2, PRIV_OBSOLETE."sudo" ),
 	'login'      => array( 2, PRIV_OBSOLETE."console login" ),
 	'su'         => array( 2, PRIV_OBSOLETE."su" ),
@@ -81,8 +80,8 @@ $AllPrivileges = array(
 	'mail'       => array( 2, PRIV_OBSOLETE."Cluenet.org mail" ),
 	'wiki'       => array( 2, "wiki" ),
 	'forum'      => array( 2, PRIV_OBSOLETE."<a href=\"http://forum.cluenet.org/\">forum</a>" ),
-	'bugs'       => array( 2, "Bugzilla" ),
-	'cacti'      => array( 2, "Cacti stats" ),
+	'bugs'       => array( 2, PRIV_OBSOLETE."Bugzilla" ),
+	'cacti'      => array( 2, PRIV_OBSOLETE."Cacti stats" ),
 	'vps'        => array( 1, "CobiVPS" ),
 	
 	'createacct'		=> array( 2, PRIV_OBSOLETE."approval of new accounts" ),
@@ -96,8 +95,6 @@ $AllPrivileges = array(
 	'dns^in-addr.arpa.'	=> array( 0, null ),
 	'tokengen^'			=> array( 2, "access token generation for <code>{}</code>" ),
 	'vpnpanel^'			=> array( 1, "VPN control of <code>{}</code>" ),
-	
-	
 );
 
 # Ignority level
