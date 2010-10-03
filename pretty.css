@@ -98,3 +98,7 @@ input.sshkey {
 .label {
 	font-weight: bold;
 }
+
+input[type="search"] {
+	-webkit-appearance: none;
+}
