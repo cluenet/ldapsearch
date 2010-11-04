@@ -5,10 +5,9 @@
 </div>
 <?php endif; ?>
 
-<?php include "view-account.inc"; ?>
-
-<?php include "view-person.inc"; ?>
-
-<?php include "view-contact.inc"; ?>
-
-<?php include "view-access.inc"; ?>
+<?php
+include "view-account.inc";
+include "view-person.inc";
+include "view-contact.inc";
+include "view-access.inc";
+?>
