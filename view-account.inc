@@ -79,6 +79,49 @@
 <?php endif; ?>
 </div>
 
+<?php
+const RWHO_LIB = "/home/grawity/code/useless/rwho";
+const RWHO_URL = "http://equal.cluenet.org/~grawity/rwho/";
+do if (include RWHO_LIB."/rwho.lib.php") {
+	$rwho = RWho\retrieve($Entry["uid"], null);
+	$num_logins = count($rwho);
+	if (!$num_logins and !$More)
+		break;
+
+	print "<div class=\"box\">\n";
+	print "<p>\n";
+	print "\t<span class=\"label\"><a href=\"".H(RWHO_URL)."\">rwho</a>:</span>\n";
+	do if ($num_logins == 0) {
+		print "\t<span class=\"value\">No active sessions.</span>\n";
+	} else {
+		$num_boxen = count(array_unique(array_map(function($a) {return $a["host"];}, $rwho)));
+		print "\t<span class=\"value\">$num_logins active ".plural($num_logins, "session")." on $num_boxen ".plural($num_boxen, "server")."</span>\n";
+		if (!$More) break;
+		$rwho = RWho\summarize($rwho);
+		print "\t<ul>\n";
+		foreach ($rwho as $ent) {
+			foreach ($ent as $k => $v)
+				$ent["{$k}_h"] = htmlspecialchars($v);
+			$line = "<strong>".$ent["host_h"]."</strong>: ";
+			if ($ent["is_summary"])
+				$line .= $ent["line_h"]." sessions";
+			else
+				$line .= "on <code>".$ent["line_h"]."</code>";
+
+			if ($ent["rhost"] === "")
+				$line .= " (console login)";
+			else
+				$line .= " from <code>".$ent["rhost_h"]."</code>";
+
+			print "\t\t<li>$line</li>\n";
+		}
+		print "\t</ul>\n";
+	} while (false);
+	print "</p>\n";
+	print "</div>\n";
+} while (false);
+?>
+
 <?php if ($More): ?>
 <div class="box">
 <p>

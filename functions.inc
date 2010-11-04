@@ -332,6 +332,11 @@ function implode_e($array) {
 	return $s;
 }
 
+# Damn useful.
+function plural($count, $noun) {
+	return $count == 1 ? $noun : $noun."s";
+}
+
 function trim_domain($fqdn, $domain=".cluenet.org") {
 	$domain_len = strlen($domain);
 	if (substr($fqdn, -$domain_len) === $domain)
