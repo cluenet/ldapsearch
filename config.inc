@@ -7,6 +7,9 @@ const SASL_REALM = "CLUENET.ORG";
 const BIND_DN = false;
 const BIND_PASS = false;
 
+const CB_SERVER = "theta.cluenet.org";
+const CB_PORT = 58945;
+
 $AllWebServices = array(
 	"twitter"    => "Twitter",
 	"digg"       => "Digg",

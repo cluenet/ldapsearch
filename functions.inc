@@ -72,32 +72,24 @@ function clean_result($entry) {
 
 
 function getCluePoints($nick) {
-	#if (strtolower($nick) == 'grawity') return '∞';
-	$nick = escapeshellarg($nick);
+	$connection = @fsockopen(CB_SERVER, CB_PORT, $errno, $errstr, 10);
+	if ($connection === False || !is_resource($connection)) {
+			return False;
+	}
 	
-	# create a temporary cache for anonymous connections
-	$ccache = tempnam("/tmp", "krb5cc_ldapsearch_");
-	putenv("KRB5CCNAME={$ccache}");
+	fwrite($connection, "points " . trim($nick) . "\r\n");
 	
-	$principal = "anon/scalar.cluenet.org";
-	$keytab = "/home/grawity/anon.scalar.cluenet.org.keytab";
-	exec("kinit -kt {$keytab} {$principal}");
-	
-	$out = exec("remctl irc.api.cluenet.org irc cluebot points {$nick}");
-	
-	@unlink($ccache);
-	
-	strtok($out, ":"); $points = strtok("");
-	$points = (int)$points;
-	
-	srand(); switch (rand(0, 7)):
-	case 1:
-		return "0x".str_pad(strtoupper(dechex($points)), 8, "0", 0);
-	case 7:
-		return base_convert($points, 10, 2);
-	default;
-		return $points;
-	endswitch;
+	$data = "";
+	while (!feof($connection)) {
+		$data .= fgets($connection, 50);
+	}
+
+	if(!isset($data) || empty($data) || !is_string($data)){
+		return False;
+	}
+
+	$parts = explode(":", $data);
+	return (int)$parts[1];
 }
 
 function formatQuota($q) {

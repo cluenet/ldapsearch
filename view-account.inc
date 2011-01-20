@@ -13,19 +13,17 @@
 	<span class="value important"><?php echo H($Entry["uid"]) ?></span>
 </p>
 
-<?php /*
 <?php if (has("clueircnick")): ?>
 <p>
 	<span class="label">Cluepoints:</span>
-	<span class="value important"><?php echo $points = getCluePoints($Entry["clueircnick"]); ?></span>
+	<span class="value important"><?php echo (($points = getCluePoints($Entry["clueircnick"])) === False) ? 'Unknown':$points; ?></span>
 	<?php if ($points > 9000): ?>
 	(OVER 9000!)
 	<?php endif; ?>
 </p>
-<?php endif; ?>
-*/ ?>
+<?php endif;
 
-<?php if ($More): ?>
+if ($More): ?>
 <p>	
 	<span class="label">Login shell:</span>
 	<?php if (isset($Entry["loginshell"])): ?>
