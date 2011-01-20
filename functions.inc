@@ -101,15 +101,19 @@ function formatQuota($q) {
 }
 
 
-function formatSize($bytes, $decimal = false) {
-	$symbol = array('B', 'k', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y');
+function formatSize($bytes, $decimal=false) {
+	$symbol = 'kMGTPEZY';
 	$exp = 0;
 	$converted_value = 0;
 	if ($bytes > 0) {
-	  $exp = floor(log($bytes)/log($decimal?1000:1024));
-	  $converted_value = ($bytes/pow($decimal?1000:1024,floor($exp)));
+		$exp = floor(log($bytes)/log($decimal?1000:1024));
+		$converted_value = $bytes/pow($decimal?1000:1024, floor($exp));
 	}
-	return sprintf( '%.0f '.$symbol[$exp].($decimal?'':'i').'B', $converted_value );
+	if ($exp) {
+		return sprintf('%.0f %s%sB', $converted_value, $symbol[$exp-1], $decimal?'':'i');
+	} else {
+		return sprintf('%d B', $converted_value);
+	}
 }
 
 
