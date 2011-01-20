@@ -7,7 +7,7 @@ const SASL_REALM = "CLUENET.ORG";
 const BIND_DN = false;
 const BIND_PASS = false;
 
-const CB_SERVER = "theta.cluenet.org";
+const CB_SERVER = "10.156.12.120";
 const CB_PORT = 58945;
 
 $AllWebServices = array(
