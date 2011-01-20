@@ -16,10 +16,7 @@
 <?php if (has("clueircnick")): ?>
 <p>
 	<span class="label">Cluepoints:</span>
-	<span class="value important"><?php echo (($points = getCluePoints($Entry["clueircnick"])) === False) ? 'Unknown':$points; ?></span>
-	<?php if ($points > 9000): ?>
-	(OVER 9000!)
-	<?php endif; ?>
+	<span class="value important"><?php echo ($points = getCluePoints($Entry["clueircnick"])) === false ? 'unknown' : $points; ?></span>
 </p>
 <?php endif;
 

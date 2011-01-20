@@ -72,24 +72,17 @@ function clean_result($entry) {
 
 
 function getCluePoints($nick) {
-	$connection = @fsockopen(CB_SERVER, CB_PORT, $errno, $errstr, 10);
-	if ($connection === False || !is_resource($connection)) {
-			return False;
-	}
+	$conn = @fsockopen(CB_SERVER, CB_PORT, $errno, $errstr, 10);
+	if (!$conn)
+		return false;
 	
-	fwrite($connection, "points " . trim($nick) . "\r\n");
-	
-	$data = "";
-	while (!feof($connection)) {
-		$data .= fgets($connection, 50);
-	}
+	fwrite($conn, "points $nick\r\n");
+	$data = fgets($conn);
+	if (!strlen($data))
+		return false;
 
-	if(!isset($data) || empty($data) || !is_string($data)){
-		return False;
-	}
-
-	$parts = explode(":", $data);
-	return (int)$parts[1];
+	$data = explode(":", trim($data));
+	return intval($data[1]);
 }
 
 function formatQuota($q) {
