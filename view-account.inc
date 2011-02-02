@@ -76,7 +76,7 @@ if ($More): ?>
 
 <?php
 const RWHO_LIB = "/home/grawity/code/useless/rwho";
-const RWHO_URL = "http://equal.cluenet.org/~grawity/rwho/";
+const RWHO_URL = "http://equal.cluenet.org/rwho/";
 do if (include RWHO_LIB."/rwho.lib.php") {
 	$rwho = RWho\retrieve($Entry["uid"], null);
 	$num_logins = count($rwho);
