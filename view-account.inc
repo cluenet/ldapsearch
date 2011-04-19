@@ -85,7 +85,7 @@ do if (include RWHO_LIB."/rwho.lib.php") {
 
 	print "<div class=\"box\">\n";
 	print "<p>\n";
-	print "\t<span class=\"label\"><a href=\"".H(RWHO_URL)."\">rwho</a>:</span>\n";
+	print "\t<span class=\"label\"><a href=\"".H(RWHO_URL)."?user=".H($Entry["uid"])."\">rwho</a>:</span>\n";
 	do if ($num_logins == 0) {
 		print "\t<span class=\"value\">No active sessions.</span>\n";
 	} else {
