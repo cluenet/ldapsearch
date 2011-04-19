@@ -68,7 +68,7 @@ define("PRIV_OBSOLETE", "<strong>(obsolete)</strong> ");
 # 1: display in "Access" tab (default)
 # 2: do not display
 $AllPrivileges = array(
-	'marriage'   => array( 0, "marriage" ),
+	'marriage'   => array( 1, "marriage" ),
 	
 	'ssh'        => array( 2, PRIV_OBSOLETE."SSH access (Debian Etch)" ),
 	'sshd'       => array( 2, PRIV_OBSOLETE."SSH access" ),
