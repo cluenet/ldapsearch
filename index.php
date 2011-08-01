@@ -1,6 +1,4 @@
 <?php
-# (c) 2009 grawity <grawity@gmail.com>
-# This software licensed under...
 $LICENSE = <<<EOF
 
             DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
@@ -20,8 +18,8 @@ $LICENSE = <<<EOF
   -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
 The source code of this application is available at:
-    git://github.com/grawity/cluenet-ldapsearch.git
-    http://github.com/grawity/cluenet-ldapsearch
+    git://github.com/cluenet/ldapsearch.git
+    http://github.com/cluenet/ldapsearch
 
 EOF;
 
