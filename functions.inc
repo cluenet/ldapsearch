@@ -166,8 +166,12 @@ function condLink($cond, $title, $url) {
 
 function gravatar($mail, $size=80, $default="mm") {
 	$hash = md5(strtolower(trim($mail)));
-	$url = "http://www.gravatar.com/avatar/$hash";
-	$url .= "?".http_build_query(array("s" => $size, "d" => $default));
+	if ($_SERVER["HTTPS"]) {
+		$url = "https://secure.gravatar.com";
+	} else {
+		$url = "http://www.gravatar.com";
+	}
+	$url .= "/avatar/$hash?".http_build_query(array("s" => $size, "d" => $default));
 	return $url;
 }
 
