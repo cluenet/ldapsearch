@@ -7,7 +7,7 @@ $new_url = mangle_query(array(
 	));
 ?>
 <p class="footer">
-<a href="http://github.com/cluenet/ldapsearch">source</a>
+<a href="https://github.com/cluenet/ldapsearch">source</a>
 | <a href="?<?php echo htmlspecialchars($new_url) ?>">switch style</a>
 | <a href="http://www.cluenet.org/">Cluenet</a>
 </p>
