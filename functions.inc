@@ -166,7 +166,7 @@ function condLink($cond, $title, $url) {
 
 function gravatar($mail, $size=80, $default="mm") {
 	$hash = md5(strtolower(trim($mail)));
-	if ($_SERVER["HTTPS"]) {
+	if (@$_SERVER["HTTPS"]) {
 		$url = "https://secure.gravatar.com";
 	} else {
 		$url = "http://www.gravatar.com";
