@@ -75,7 +75,7 @@ if ($More): ?>
 </div>
 
 <?php
-const RWHO_LIB = "/home/grawity/code/useless/rwho";
+const RWHO_LIB = "/cluenet/rwho";
 const RWHO_URL = "http://equal.cluenet.org/rwho/";
 do if (include RWHO_LIB."/php/librwho.php") {
 	$rwho = RWho\retrieve($Entry["uid"], null);
