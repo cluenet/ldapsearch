@@ -72,6 +72,9 @@ function clean_result($entry) {
 
 
 function getCluePoints($nick) {
+	if (!ENABLE_CLUEPOINTS)
+		return "unknown";
+
 	$conn = @fsockopen(CB_SERVER, CB_PORT, $errno, $errstr, 10);
 	if (!$conn)
 		return false;

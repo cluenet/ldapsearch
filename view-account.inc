@@ -13,7 +13,7 @@
 	<span class="value important"><?php echo H($Entry["uid"]) ?></span>
 </p>
 
-<?php if (has("clueircnick")): ?>
+<?php if (ENABLE_CLUEPOINTS && has("clueircnick")): ?>
 <p>
 	<span class="label">Cluepoints:</span>
 	<span class="value important"><?php echo ($points = getCluePoints($Entry["clueircnick"])) === false ? 'unknown' : $points; ?></span>
