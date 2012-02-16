@@ -1,5 +1,6 @@
 <?php
-const LDAP_URI = "ldap://ldap.cluenet.org:389";
+const LDAP_URI = "ldap://ldap.cluenet.org";
+#const LDAP_URI = "ldap://localhost:3890";
 const LDAP_STARTTLS = false;
 
 const BASE_DN = "dc=cluenet,dc=org";
