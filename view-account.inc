@@ -77,7 +77,7 @@ if ($More): ?>
 <?php
 const RWHO_LIB = "/cluenet/rwho";
 const RWHO_URL = "http://equal.cluenet.org/rwho/";
-do if (include RWHO_LIB."/php/librwho.php") {
+do if (@include RWHO_LIB."/lib-php/librwho.php") {
 	$rwho = RWho\retrieve($Entry["uid"], null);
 	$num_logins = count($rwho);
 	if (!$num_logins and !$More)
