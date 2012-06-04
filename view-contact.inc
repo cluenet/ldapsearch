@@ -5,9 +5,10 @@
 <?php
 list ($sections, $numHidden, $numDisplayed) = checkDisplaySections(array(
 	array("mail", "pgpkeyid", "altemail"),
-	array("xmppuri", "msnsn", "aimsn", "telephonenumber"),
-	array("uri", "openid"),
-	# array("cluegeneralcontact"),
+	array("labeleduri"),
+	# array("xmppuri", "msnsn", "aimsn", "telephonenumber"),
+	# array("uri", "openid"),
+	array("contactinfo"),
 ));
 
 if ($numDisplayed + $numHidden > 0) {
@@ -16,7 +17,7 @@ if ($numDisplayed + $numHidden > 0) {
 		include "box-singlesection.inc";
 	}
 
-	if (!$Moar and has("cluegeneralcontact")) $numHidden++;
+	if (!$Moar and has("contactinfo")) $numHidden++;
 
 	if ($numHidden > 0) moreLink($numHidden, "contact");
 }

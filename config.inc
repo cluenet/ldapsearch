@@ -55,7 +55,7 @@ $SingleAttributes = array(
 	'uidnumber',
 	'gidnumber',
 	'homedirectory',
-	'krb5principalname',
+	'krbprincipalname',
 	'mailquota',
 	'gecos',
 	'loginshell',
@@ -106,16 +106,13 @@ $AllPrivileges = array(
 # 0: display in info
 # 1: display only in the full tab
 $AllAttributes = array(
-	'xmppuri'		=> array( 0, "XMPP" ),
-	'msnsn'			=> array( 1, "<abbr title=\"Windows Live Messenger\">WLM</abbr>" ),
-	'aimsn'			=> array( 1, "<abbr title=\"AOL Instant Messenger\">AIM</abbr>" ),
+	'labeleduri'		=> array( 0, "URIs" ),
+
 	'mail'			=> array( 0, "Email" ),
 	'altemail'		=> array( 1, "Alternate email" ),
 	'pgpkeyid'		=> array( 0, "PGP key ID" ),
 	'telephonenumber'	=> array( 1, "Phone" ),
-	'uri'			=> array( 1, "URI" ),
-	'openid'		=> array( 1, "OpenID" ),
-	'cluegeneralcontact'	=> array( 1, "Other" ),
+	'contactinfo'		=> array( 1, "Other" ),
 
 	'c'			=> array( 1, "Country" ),
 	'postaladdress'		=> array( 1, "Address" ),

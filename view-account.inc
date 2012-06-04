@@ -8,7 +8,7 @@
 </p>
 <?php endif; ?>
 
-<p>	
+<p>
 	<span class="label">User name:</span>
 	<span class="value important"><?php echo H($Entry["uid"]) ?></span>
 </p>
@@ -21,7 +21,7 @@
 <?php endif;
 
 if ($More): ?>
-<p>	
+<p>
 	<span class="label">Login shell:</span>
 	<?php if (isset($Entry["loginshell"])): ?>
 	<span class="value"><?php echo $Entry["loginshell"]; ?></span>
@@ -39,37 +39,30 @@ if ($More): ?>
 <?php endif; ?>
 
 <?php if ($More and isset($Entry["uidnumber"])): ?>
-<p>	
+<p>
 	<span class="label">UID:</span>
 	<span class="value important"><?php echo $Entry["uidnumber"]; ?></span>
 </p>
 <?php endif; ?>
-	
+
 <?php if ($More and isset($Entry["gidnumber"])): ?>
 <p>
 	<span class="label">GID:</span>
 	<span class="value"><?php echo $Entry["gidnumber"]; ?></span>
 </p>
 <?php endif; ?>
-	
-<?php if ($More and isset($Entry["krb5principalname"])): ?>
+
+<?php if ($More and isset($Entry["krbprincipalname"])): ?>
 <p>
 	<span class="label">Kerberos principal:</span>
-	<span class="value"><?php echo $Entry["krb5principalname"]; ?></span>
+	<span class="value"><?php echo $Entry["krbprincipalname"]; ?></span>
 </p>
 <?php endif; ?>
-	
+
 <?php if ($More and isset($Entry["timezone"])): ?>
 <p>
 	<span class="label">Timezone:</span>
 	<span class="value"><?php echo $Entry["timezone"]; ?></span>
-</p>
-<?php endif; ?>
-	
-<?php if ($More and isset($Entry["mailquota"])): ?>
-<p>
-	<span class="label">Mail quota:</span>
-	<span class="value"><?php echo formatQuota($Entry["mailquota"]); ?></span>
 </p>
 <?php endif; ?>
 </div>

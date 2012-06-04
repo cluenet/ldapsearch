@@ -11,14 +11,25 @@ foreach ($attributes as $attr) {
 	# htmlspecialchars is done in results-single.inc
 	$value = $Entry[$attr];
 
+	if ($attr == "labeleduri") {
+		$urls = $value;
+		sort($urls);
+		$value = "<ul>\n";
+		foreach ($urls as $v) {
+			@list ($uri, $label) = explode(" ", $v, 2);
+			if (!strlen($label))
+				$label = "<i>$uri</i>";
+			$value .= "\t<li><a href=\"{$uri}\">{$label}</a></li>\n";
+		}
+		$value .= "</ul>\n";
+	} elseif ($attr == "contactinfo") {
+		$value = "<ul>\n\t<li>".implode("</li>\n\t<li>", $value)."</li>\n</ul>\n";
+	}
+
 	switch ($attr):
 	case "mail":
 	case "altemail":
 		$value = linkify($value, "mail");
-		break;
-	case "openid":
-		if (preg_match("|^https?://|", $value))
-			$value = linkify($value, "www");
 		break;
 	endswitch;
 	
