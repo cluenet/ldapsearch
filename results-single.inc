@@ -17,24 +17,10 @@ $IsSuspended = array_search('suspendedUser', $Entry['objectclass']) !== false;
 
 ///// Check for errors in LDAP entry
 $Errors = array();
-$Invalid = array();
 
 $Name = ($Entry["cn"] != $Entry["uid"]) ? $Entry["cn"] : false;
 $Entry['uidnumber'] = intval($Entry['uidnumber']);
 $Entry['gidnumber'] = intval($Entry['gidnumber']);
-
-if (!has('krb5principalname'))
-	$Errors[] = "is missing a Kerberos principal (<code>krb5PrincipalName</code>)";
-
-if (has('pgpkeyid') and !preg_match("/^(0x)?([0-9a-z]{8}){1,2}$/i", $Entry['pgpkeyid']))
-	$Errors[] = "incorrect PGP key ID format";
-
-if (has('openid') and
-	!(substr($Entry['openid'], 0, 7) == "http://"
-	or substr($Entry['openid'], 0, 8) == "https://")) {
-	$Errors[] = "invalid OpenID URL - must start with <code>http://</code> or <code>https://</code>";
-	$Invalid["openid"] = true;
-}
 
 $Title = H($Entry["uid"]);
 require "html-header.inc";
