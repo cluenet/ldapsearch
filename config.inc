@@ -106,7 +106,7 @@ $AllPrivileges = array(
 # 0: display in info
 # 1: display only in the full tab
 $AllAttributes = array(
-	'labeleduri'		=> array( 0, "URIs" ),
+	'labeleduri'		=> array( 0, "Internet addresses" ),
 
 	'mail'			=> array( 0, "Email" ),
 	'altemail'		=> array( 1, "Alternate email" ),

@@ -1,17 +1,21 @@
 <?php
-echo "<p>\n";
 foreach ($attributes as $attr) {
 	if (isset($AllAttributes[$attr]))
 		$name = $AllAttributes[$attr][1];
 	else
 		$name = $attr;
-		
+
+	echo "<p>\n";
 	echo "\t<span class=\"label\">{$name}:</span>\n";
 	
 	# htmlspecialchars is done in results-single.inc
 	$value = $Entry[$attr];
 
-	if ($attr == "labeleduri") {
+	switch ($attr):
+	case "contactinfo":
+		$value = "<ul>\n\t<li>".implode("</li>\n\t<li>", $value)."</li>\n</ul>\n";
+		break;
+	case "labeleduri":
 		$urls = $value;
 		sort($urls);
 		$value = "<ul>\n";
@@ -22,20 +26,20 @@ foreach ($attributes as $attr) {
 			$value .= "\t<li><a href=\"{$uri}\">{$label}</a></li>\n";
 		}
 		$value .= "</ul>\n";
-	} elseif ($attr == "contactinfo") {
-		$value = "<ul>\n\t<li>".implode("</li>\n\t<li>", $value)."</li>\n</ul>\n";
-	}
-
-	switch ($attr):
+		break;
 	case "mail":
 	case "altemail":
 		$value = linkify($value, "mail");
+		break;
+	case "pgpkeyid":
+		@list($id, $uri) = explode(" ", $value, 2);
+		if (strlen(@$uri))
+			$value = "<a href=\"{$uri}\">{$id}</a>";
 		break;
 	endswitch;
 	
 	if (is_array($value)) $value = implode(", ", $value);
 	
 	echo "\t<span class=\"value\">{$value}</span>\n";
-	echo "<br />\n";
+	echo "</p>\n";
 }
-echo "</p>\n";
