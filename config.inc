@@ -105,16 +105,19 @@ $AllPrivileges = array(
 # Ignority level
 # 0: display in info
 # 1: display only in the full tab
-$AllAttributes = array(
-	'labeleduri'		=> array( 0, "Internet addresses" ),
 
+const DISPLAY_ALWAYS = 0;
+const DISPLAY_EXTENDED = 1;
+
+$AllAttributes = array(
+	'labeleduri'		=> array( 1, "Internet addresses" ),
 	'mail'			=> array( 0, "Email" ),
 	'altemail'		=> array( 1, "Alternate email" ),
-	'pgpkeyid'		=> array( 0, "PGP key ID" ),
+	'pgpkeyid'		=> array( 1, "PGP key ID" ),
 	'telephonenumber'	=> array( 1, "Phone" ),
 	'contactinfo'		=> array( 1, "Other" ),
 
-	'c'			=> array( 1, "Country" ),
+	'c'			=> array( 0, "Country" ),
 	'postaladdress'		=> array( 1, "Address" ),
 
 	'spokenlanguage'	=> array( 1, "Spoken languages" ),
