@@ -13,7 +13,7 @@ function do_jpegphoto(&$photo) {
 		header("Content-Length: 0");
 	}
 	else {
-		header("Etag: {$tag}");
+		header("ETag: {$tag}");
 		header("Content-Type: image/jpeg");
 		header("Content-Length: ".strlen($photo));
 		print $photo;
