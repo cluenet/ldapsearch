@@ -15,6 +15,17 @@ foreach ($attributes as $attr) {
 	case "contactinfo":
 		$value = "<ul>\n\t<li>".implode("</li>\n\t<li>", $value)."</li>\n</ul>\n";
 		break;
+	case "c":
+		$code = strtoupper($value);
+		$country = lookup_country($code);
+		if ($country)
+			$value = $country;
+		$file = "flags/".strtolower($code).".png";
+		if (file_exists($file))
+			$value = "<img src=\"{$file}\"> $value";
+		else
+			$value = "$value ($code)";
+		break;
 	case "labeleduri":
 		$urls = $value;
 		sort($urls);

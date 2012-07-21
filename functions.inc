@@ -341,4 +341,25 @@ function trim_domain($fqdn, $domain=".cluenet.org") {
 		return $fqdn;
 }
 
+// ISO 3166-1 alpha-2
+function lookup_country($code) {
+	$code = strtoupper($code);
+	if ($fh = fopen("iso3166-1.a2.txt", "r")) {
+		while (($line = fgets($fh)) !== false) {
+			$line = trim($line);
+			if (!strlen($line))
+				continue;
+			list($n, $c) = explode(";", $line, 2);
+			if ($c === $code) {
+				fclose($fh);
+				$n = strtolower($n);
+				$n = ucwords($n);
+				return $n;
+			}
+		}
+		fclose($fh);
+	}
+	return null;
+}
+
 ?>
