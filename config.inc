@@ -12,40 +12,17 @@ const ENABLE_CLUEPOINTS = true;
 const CB_SERVER = "virgule.cluenet.org";
 const CB_PORT = 58945;
 
-$AllWebServices = array(
-	"twitter"	=> "Twitter",
-	"digg"		=> "Digg",
-	"slashdot"	=> "Slashdot",
-	"googlecode"	=> "Google Code",
-	"github"	=> "GitHub",
-	"freshmeat"	=> "Freshmeat",
-	"wikipedia"	=> "Wikipedia",
-);
-
 $SingleAttributes = array(
-	'cluesshprivkey',
 	'cluesignupinfo',
 	'clueircnick',
 	'cluegender',
 	'cluebirthyear',
 	'suspendedpassword',
 	'pgpkeyid',
-	'aimsn',
-	'xmppuri',
-	'msnsn',
-	'scheduleinfo',
-	'twitteruser',
-	'digguser',
-	'slashdotuser',
-	'githubuser',
-	'freshmeatuser',
-	'wikipediauser',
 	'occupation',
 	'timezone',
 	'school',
-	'wikipediauser',
 	'cluenotes',
-	'openid',
 	'givenname',
 	'c',
 	'st', ## ?
@@ -55,8 +32,7 @@ $SingleAttributes = array(
 	'uidnumber',
 	'gidnumber',
 	'homedirectory',
-	'krbprincipalname',
-	'mailquota',
+	'krb5principalname',
 	'gecos',
 	'loginshell',
 	'cn',

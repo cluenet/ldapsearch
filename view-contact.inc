@@ -6,8 +6,6 @@
 list ($sections, $numHidden, $numDisplayed) = checkDisplaySections(array(
 	array("mail", "pgpkeyid", "altemail"),
 	array("labeleduri"),
-	# array("xmppuri", "msnsn", "aimsn", "telephonenumber"),
-	# array("uri", "openid"),
 	array("contactinfo"),
 ));
 
