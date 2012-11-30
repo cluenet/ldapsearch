@@ -20,7 +20,25 @@
 </p>
 <?php endif;
 
-if ($More): ?>
+if (isset($Entry["seealso"])) { ?>
+<p>See also:</p>
+<ul>
+<?php foreach ($Entry["seealso"] as $val) {
+	$valH = htmlspecialchars($val);
+	if (preg_match('/^uid=([^,]+),ou=people,dc=cluenet,dc=org$/', $val, $m)) {
+		$uidH = htmlspecialchars($m[1]);
+		$line = "<code><a href=\"?q=$uidH\">$valH</a></code>";
+	} else {
+		$line = "<code>$valH</code>";
+	}
+	print "\t<li>$line</li>\n";
+} ?>
+</ul>
+<?php } ?>
+</div>
+
+<?php if ($More): ?>
+<div class="box">
 <p>
 	<span class="label">Login shell:</span>
 	<?php if (isset($Entry["loginshell"])): ?>
@@ -29,43 +47,43 @@ if ($More): ?>
 	<span class="value empty">not set - usually defaults to <code>/bin/sh</code></span>
 	<?php endif; ?>
 </p>
-<?php endif; ?>
 
-<?php if ($More and isset($Entry["homedirectory"])): ?>
+<?php if (isset($Entry["homedirectory"])): ?>
 <p>
 	<span class="label">Home directory:</span>
 	<span class="value"><?php echo $Entry["homedirectory"]; ?></span>
 </p>
 <?php endif; ?>
 
-<?php if ($More and isset($Entry["uidnumber"])): ?>
+<?php if (isset($Entry["uidnumber"])): ?>
 <p>
 	<span class="label">UID:</span>
 	<span class="value important"><?php echo $Entry["uidnumber"]; ?></span>
 </p>
 <?php endif; ?>
 
-<?php if ($More and isset($Entry["gidnumber"])): ?>
+<?php if (isset($Entry["gidnumber"])): ?>
 <p>
 	<span class="label">GID:</span>
 	<span class="value"><?php echo $Entry["gidnumber"]; ?></span>
 </p>
 <?php endif; ?>
 
-<?php if ($More and isset($Entry["krbprincipalname"])): ?>
+<?php if (isset($Entry["krbprincipalname"])): ?>
 <p>
 	<span class="label">Kerberos principal:</span>
 	<span class="value"><?php echo $Entry["krbprincipalname"]; ?></span>
 </p>
 <?php endif; ?>
 
-<?php if ($More and isset($Entry["timezone"])): ?>
+<?php if (isset($Entry["timezone"])): ?>
 <p>
 	<span class="label">Timezone:</span>
 	<span class="value"><?php echo $Entry["timezone"]; ?></span>
 </p>
 <?php endif; ?>
 </div>
+<?php endif; ?>
 
 <?php
 const RWHO_LIB = "/cluenet/rwho";
