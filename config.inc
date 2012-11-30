@@ -8,8 +8,8 @@ const SASL_REALM = "CLUENET.ORG";
 const BIND_DN = false;
 const BIND_PASS = false;
 
-const ENABLE_CLUEPOINTS = false;
-const CB_SERVER = "delta.cluenet.org";
+const ENABLE_CLUEPOINTS = true;
+const CB_SERVER = "virgule.cluenet.org";
 const CB_PORT = 58945;
 
 $AllWebServices = array(
