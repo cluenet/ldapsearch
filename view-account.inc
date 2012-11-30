@@ -86,6 +86,7 @@ if (isset($Entry["seealso"])) { ?>
 <?php endif; ?>
 
 <?php
+/*
 const RWHO_LIB = "/cluenet/rwho";
 const RWHO_URL = "http://equal.cluenet.org/rwho/";
 do if (@include RWHO_LIB."/lib-php/librwho.php") {
@@ -126,6 +127,7 @@ do if (@include RWHO_LIB."/lib-php/librwho.php") {
 	print "</p>\n";
 	print "</div>\n";
 } while (false);
+*/
 ?>
 
 <?php if ($More): ?>
