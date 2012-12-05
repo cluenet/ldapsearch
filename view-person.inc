@@ -29,6 +29,8 @@ else
 <?php
 // contact info box
 
+$totalHidden = 0;
+
 list ($sections, $numHidden, $numDisplayed) = checkDisplaySections(array(
 	// basic contact information
 	array("mail", "pgpkeyid", "altemail"),
@@ -50,8 +52,7 @@ if ($numDisplayed + $numHidden > 0) {
 	}
 	if (!$Moar and has("contactinfo"))
 		$numHidden++;
-	if ($numHidden > 0)
-		moreLink($numHidden, "person");
+	$totalHidden += $numHidden;
 	if ($Moar) echo "</div>\n";
 }
 
@@ -67,10 +68,12 @@ if (count($attributes) > 0) {
 		echo "<h3>Postal address</h3>\n";
 	}
 	include "box-singlesection.inc";
-	if ($numHidden > 0)
-		moreLink($numHidden, "person");
+	$totalHidden += $numHidden;
 	if ($Moar) echo "</div>\n";
 }
+
+if ($totalHidden > 0)
+	moreLink($totalHidden, "person");
 
 if (!$Moar) echo "</div>\n";
 
