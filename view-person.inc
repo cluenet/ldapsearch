@@ -1,61 +1,79 @@
 <!-- BEGIN view/person -->
 <?php $Moar = ($View == "person"); ?>
+
 <div class="box content">
 <h2>Personal</h2>
 <p>
 	<span class="label">Real name:</span>
-	<?php
-	if ($Name)
-		echo "\t<span class=\"value important\">{$Name}</span>\n";
-	else
-		echo "\t<span class=\"value comment\">not set</span>\n";
-	?>
+<?php
+if ($Name)
+	echo "\t<span class=\"value important\">{$Name}</span>\n";
+else
+	echo "\t<span class=\"value comment\">unknown</span>\n";
+?>
 	<br />
 
 	<span class="label">IRC nick:</span>
-	<?php
-	if (has("clueIrcNick"))
-		echo "\t<span class=\"value important\">{$Entry["clueircnick"]}</span>\n";
-	else
-		echo "\t<span class=\"value comment\">this user is too lazy to set one</span>\n";
-	?>
-</p>
-</div>
-
-<?php if ($Moar and has("cluegeneralcontact")): ?>
-<div class="box content">
 <?php
-foreach ($Entry["cluegeneralcontact"] as $e)
-	foreach (explode("\n", $e) as $line)
-		echo "<p>{$line}</p>\n";
+if (has("clueIrcNick"))
+	echo "\t<span class=\"value important\">{$Entry["clueircnick"]}</span>\n";
+else
+	echo "\t<span class=\"value comment\">unknown</span>\n";
 ?>
+	</p>
+<?php if ($Moar) { ?>
 </div>
-<?php endif; ?>
+<?php } ?>
 
-<!-- Begin single/person/crap -->
+
 <?php
-list ($attributes, ,) = checkDisplaySection(
-	array("spokenlanguage")
+// contact info box
+
+list ($sections, $numHidden, $numDisplayed) = checkDisplaySections(array(
+	// basic contact information
+	array("mail", "pgpkeyid", "altemail"),
+	// websites and other URLs
+	array("labeleduri"),
+	// IM addresses, &c.
+	array("contactinfo"),
+));
+
+if ($numDisplayed + $numHidden > 0) {
+	if ($Moar) {
+		echo "<div class=\"box content\">\n";
+		echo "<h3>Contact information</h3>\n";
+	}
+	foreach ($sections as $section => $attributes) {
+		if (count($attributes) == 0)
+			continue;
+		include "box-singlesection.inc";
+	}
+	if (!$Moar and has("contactinfo"))
+		$numHidden++;
+	if ($numHidden > 0)
+		moreLink($numHidden, "person");
+	if ($Moar) echo "</div>\n";
+}
+
+// postal addresses box
+
+list ($attributes, $numHidden, $numDisplayed) = checkDisplaySection(
+	array("postaladdress", "c")
 );
 
 if (count($attributes) > 0) {
-	echo "<div class=\"box content\">\n";
+	if ($Moar) {
+		echo "<div class=\"box content\">\n";
+		echo "<h3>Postal address</h3>\n";
+	}
 	include "box-singlesection.inc";
-	echo "</div>\n";
+	if ($numHidden > 0)
+		moreLink($numHidden, "person");
+	if ($Moar) echo "</div>\n";
 }
-?>
 
-<!-- Begin single/person/skills -->
-<?php if ($Moar and has("skill")): ?>
-<div class="box content">
-<h3>Skills</h3>
-<ul>
-<?php
-foreach (htmlize($Entry["skill"]) as $skill)
-	echo "\t<li>{$skill}</li>\n";
+if (!$Moar) echo "</div>\n";
+
 ?>
-</ul>
-</div>
-<?php endif; // $Moar and has(skill) ?>
 
 <!-- END single/person -->

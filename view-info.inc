@@ -8,6 +8,5 @@
 <?php
 include "view-account.inc";
 include "view-person.inc";
-include "view-contact.inc";
 include "view-access.inc";
 ?>
