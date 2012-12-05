@@ -20,7 +20,7 @@
 </p>
 <?php endif;
 
-if (isset($Entry["seealso"])) { ?>
+if ($More && isset($Entry["seealso"])) { ?>
 <p>See also:</p>
 <ul>
 <?php foreach ($Entry["seealso"] as $val) {
@@ -35,6 +35,11 @@ if (isset($Entry["seealso"])) { ?>
 } ?>
 </ul>
 <?php } ?>
+
+<?php
+if (!$More)
+	expandLink("details", "account");
+?>
 </div>
 
 <?php if ($More): ?>
@@ -48,26 +53,17 @@ if (isset($Entry["seealso"])) { ?>
 	<?php endif; ?>
 </p>
 
-<?php if (isset($Entry["homedirectory"])): ?>
 <p>
 	<span class="label">Home directory:</span>
 	<span class="value"><?php echo $Entry["homedirectory"]; ?></span>
 </p>
-<?php endif; ?>
 
-<?php if (isset($Entry["uidnumber"])): ?>
 <p>
 	<span class="label">UID:</span>
-	<span class="value important"><?php echo $Entry["uidnumber"]; ?></span>
-</p>
-<?php endif; ?>
-
-<?php if (isset($Entry["gidnumber"])): ?>
-<p>
+	<span class="value important"><?php echo $Entry["uidnumber"]; ?></span>,
 	<span class="label">GID:</span>
 	<span class="value"><?php echo $Entry["gidnumber"]; ?></span>
 </p>
-<?php endif; ?>
 
 <?php if (isset($Entry["krbprincipalname"])): ?>
 <p>

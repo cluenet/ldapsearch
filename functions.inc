@@ -268,12 +268,17 @@ function hasAll($what) {
 	return true;
 }
 
-function moreLink($count, $destView) {
+function expandLink($text, $destView) {
 	echo "<p class=\"more\">",
 		"<a href=\"?q=".htmlspecialchars($_GET["q"])."&amp;view={$destView}\" class=\"more\">",
-		($count == 1)? "one more" : "{$count} more",
+		$text,
 		"</a>",
 		"</p>\n";
+}
+
+function moreLink($count, $destView) {
+	$text = ($count == 1) ? "one more" : "{$count} more";
+	expandLink($text, $destView);
 }
 
 function attrlevel($name) {
