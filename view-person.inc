@@ -45,24 +45,6 @@ if (count($attributes) > 0) {
 }
 ?>
 
-<!-- Begin single/person/webservices -->
-<?php
-$display = array();
-foreach ($AllWebServices as $service => $sname)
-	if (has("{$service}user")) $display[] = $service;
-
-if ($Moar and count($display) > 0): ?>
-<div class="box content">
-<h3>Web services</h3>
-<?php foreach ($display as $serv) { ?>
-<p>
-	<span class="label"><?php echo $AllWebServices[$serv]; ?>:</span>
-	<span class="value"><?php echo linkify($Entry["{$serv}user"], $serv); ?></span>
-</p>
-<?php } // foreach ?>
-</div>
-<?php endif; // $Moar and hasAny(webservices) ?>
-
 <!-- Begin single/person/skills -->
 <?php if ($Moar and has("skill")): ?>
 <div class="box content">
