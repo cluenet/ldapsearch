@@ -32,7 +32,7 @@ $SingleAttributes = array(
 	'uidnumber',
 	'gidnumber',
 	'homedirectory',
-	'krb5principalname',
+	'krbprincipalname',
 	'gecos',
 	'loginshell',
 	'cn',
