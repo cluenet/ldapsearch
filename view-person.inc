@@ -11,8 +11,9 @@ if ($Name)
 else
 	echo "\t<span class=\"value comment\">unknown</span>\n";
 ?>
-	<br />
+	</p>
 
+<p>
 	<span class="label">IRC nick:</span>
 <?php
 if (has("clueIrcNick"))
@@ -59,7 +60,7 @@ if ($numDisplayed + $numHidden > 0) {
 // postal addresses box
 
 list ($attributes, $numHidden, $numDisplayed) = checkDisplaySection(
-	array("postaladdress", "c")
+	array("postaladdress", "l", "st", "c")
 );
 
 if (count($attributes) > 0) {

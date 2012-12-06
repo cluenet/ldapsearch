@@ -94,6 +94,8 @@ $AllAttributes = array(
 	'contactinfo'		=> array( 1, "Other" ),
 
 	'c'			=> array( 0, "Country" ),
+	'st'			=> array( 1, "State" ),
+	'l'			=> array( 1, "Location" ),
 	'postaladdress'		=> array( 1, "Address" ),
 
 	'spokenlanguage'	=> array( 1, "Spoken languages" ),
