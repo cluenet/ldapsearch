@@ -18,23 +18,7 @@
 	<span class="label">Cluepoints:</span>
 	<span class="value important"><?= ($points = getCluePoints($Entry["clueircnick"])) === false ? 'unknown' : $points ?></span>
 </p>
-<?php endif;
-
-if ($More && isset($Entry["seealso"])) { ?>
-<p>See also:</p>
-<ul>
-<?php foreach ($Entry["seealso"] as $val) {
-	$valH = htmlspecialchars($val);
-	if (preg_match('/^uid=([^,]+),ou=people,dc=cluenet,dc=org$/', $val, $m)) {
-		$uidH = htmlspecialchars($m[1]);
-		$line = "<code><a href=\"?q=$uidH\">$valH</a></code>";
-	} else {
-		$line = "<code>$valH</code>";
-	}
-	print "\t<li>$line</li>\n";
-} ?>
-</ul>
-<?php } ?>
+<?php endif; ?>
 
 <?php
 if (!$More)
@@ -136,6 +120,32 @@ do if (@include RWHO_LIB."/lib-php/librwho.php") {
 	<span class="value"><?= strftime("%Y-%m-%d", $Entry["createTimestamp"]) ?></span>
 	<strong>(mass-import; actual date unknown)</strong>
 <?php endif; ?>
-</p>
+	</p>
+
+<?php if (isset($Entry["seealso"])) { ?>
+<p>
+	<span class="label">See also:</span>
+<?php
+$islist = count($Entry["seealso"]) > 1;
+echo $islist
+	? "</p>\n<ul class=\"value\">\n"
+	: "<span class=\"value\">";
+foreach ($Entry["seealso"] as $val) {
+	$valH = H($val);
+	if (preg_match('/^uid=([^,]+),ou=people,dc=cluenet,dc=org$/', $val, $m)) {
+		$uidH = H($m[1]);
+		$line = "<code><a href=\"?q=$uidH\">$valH</a></code>";
+	} else {
+		$line = "<code>$valH</code>";
+	}
+	echo $islist
+		? "\t<li>$line</li>\n"
+		: $line;
+}
+echo $islist
+	? "</ul>\n"
+	: "</span>\n</p>\n";
+?>
+<?php } ?>
 </div>
 <?php endif; ?>
