@@ -1,5 +1,5 @@
 <!-- One result, LDIF view -->
-<div class="box">
+<div class="box content">
 <?php
 $show_props = isset($_GET["properties"]);
 $command = implode(" ", array(

@@ -1,6 +1,6 @@
 <!-- One result, SSH key view -->
 <?php ?>
-<div class="box">
+<div class="box content">
 <h2>SSH public keys</h2>
 <?php
 

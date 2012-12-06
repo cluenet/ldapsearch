@@ -1,5 +1,5 @@
 <?php $More = ($View == "account"); ?>
-<div class="box">
+<div class="box content">
 <h2>Account</h2>
 
 <?php if ($IsSuspended): ?>
@@ -43,7 +43,7 @@ if (!$More)
 </div>
 
 <?php if ($More): ?>
-<div class="box">
+<div class="box content">
 <p>
 	<span class="label">Login shell:</span>
 	<?php if (isset($Entry["loginshell"])): ?>
@@ -91,7 +91,7 @@ do if (@include RWHO_LIB."/lib-php/librwho.php") {
 	if (!$num_logins and !$More)
 		break;
 
-	print "<div class=\"box\">\n";
+	print "<div class=\"box content\">\n";
 	print "<p>\n";
 	print "\t<span class=\"label\"><a href=\"".H(RWHO_URL)."?user=".H($Entry["uid"])."\">rwho</a>:</span>\n";
 	do if ($num_logins == 0) {
@@ -127,7 +127,7 @@ do if (@include RWHO_LIB."/lib-php/librwho.php") {
 ?>
 
 <?php if ($More): ?>
-<div class="box">
+<div class="box content">
 <p>
 	<span class="label">Entry created:</span>
 <?php if ($Entry["createTimestamp"] > 1207008000): ?>
