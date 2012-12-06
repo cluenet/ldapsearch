@@ -10,13 +10,13 @@
 
 <p>
 	<span class="label">User name:</span>
-	<span class="value important"><?php echo H($Entry["uid"]) ?></span>
+	<span class="value important"><?= $Entry["uid"] ?></span>
 </p>
 
 <?php if (ENABLE_CLUEPOINTS && has("clueircnick")): ?>
 <p>
 	<span class="label">Cluepoints:</span>
-	<span class="value important"><?php echo ($points = getCluePoints($Entry["clueircnick"])) === false ? 'unknown' : $points; ?></span>
+	<span class="value important"><?= ($points = getCluePoints($Entry["clueircnick"])) === false ? 'unknown' : $points ?></span>
 </p>
 <?php endif;
 
@@ -47,7 +47,7 @@ if (!$More)
 <p>
 	<span class="label">Login shell:</span>
 	<?php if (isset($Entry["loginshell"])): ?>
-	<span class="value"><?php echo $Entry["loginshell"]; ?></span>
+	<span class="value pre"><?= $Entry["loginshell"] ?></span>
 	<?php else: ?>
 	<span class="value empty">not set - usually defaults to <code>/bin/sh</code></span>
 	<?php endif; ?>
@@ -55,27 +55,27 @@ if (!$More)
 
 <p>
 	<span class="label">Home directory:</span>
-	<span class="value"><?php echo $Entry["homedirectory"]; ?></span>
+	<span class="value pre"><?= $Entry["homedirectory"] ?></span>
 </p>
 
 <p>
 	<span class="label">UID:</span>
-	<span class="value important"><?php echo $Entry["uidnumber"]; ?></span>,
+	<span class="value pre important"><?= $Entry["uidnumber"] ?></span>,
 	<span class="label">GID:</span>
-	<span class="value"><?php echo $Entry["gidnumber"]; ?></span>
+	<span class="value pre"><?= $Entry["gidnumber"] ?></span>
 </p>
 
 <?php if (isset($Entry["krbprincipalname"])): ?>
 <p>
 	<span class="label">Kerberos principal:</span>
-	<span class="value"><?php echo $Entry["krbprincipalname"]; ?></span>
+	<span class="value pre"><?= $Entry["krbprincipalname"] ?></span>
 </p>
 <?php endif; ?>
 
 <?php if (isset($Entry["timezone"])): ?>
 <p>
 	<span class="label">Timezone:</span>
-	<span class="value"><?php echo $Entry["timezone"]; ?></span>
+	<span class="value"><?= $Entry["timezone"] ?></span>
 </p>
 <?php endif; ?>
 </div>
@@ -131,10 +131,10 @@ do if (@include RWHO_LIB."/lib-php/librwho.php") {
 <p>
 	<span class="label">Entry created:</span>
 <?php if ($Entry["createTimestamp"] > 1207008000): ?>
-	<span class="value important"><?php echo strftime("%Y-%m-%d %H:%M", $Entry["createTimestamp"]); ?></span>
+	<span class="value important"><?= strftime("%Y-%m-%d", $Entry["createTimestamp"]) ?></span>
 <?php else: ?>
-	<span class="value"><?php echo strftime("%Y-%m-%d %H:%M", $Entry["createTimestamp"]); ?></span>
-	<strong>(mass-import; actual date joined unknown)</strong>
+	<span class="value"><?= strftime("%Y-%m-%d", $Entry["createTimestamp"]) ?></span>
+	<strong>(mass-import; actual date unknown)</strong>
 <?php endif; ?>
 </p>
 </div>

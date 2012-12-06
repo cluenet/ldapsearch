@@ -8,6 +8,9 @@ body {
 	margin-right: auto;*/
 }
 .error { color: #f33; }
+.pre {
+	font-family: monospace;
+}
 a:link, a:visited {
 	color: #000;
 	text-decoration: none;
