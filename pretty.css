@@ -57,7 +57,7 @@ td { padding: 0.2em; }
 	 * to http://css-tricks.com/rgba-browser-support/
 	 */
 	background: rgb(0, 0, 0);
-	background: rgba(0, 0, 0, 0.75);
+	background: rgba(0, 0, 0, 0.85);
 	/*opacity: 0.7;*/
 
 	-moz-border-radius: 5px;
