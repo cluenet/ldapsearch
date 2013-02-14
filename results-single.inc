@@ -25,6 +25,17 @@ $Name = ($Entry["cn"] != $Entry["uid"]) ? $Entry["cn"] : false;
 $Entry['uidnumber'] = intval($Entry['uidnumber']);
 $Entry['gidnumber'] = intval($Entry['gidnumber']);
 
+function isAttrVisible($attr, $default=false) {
+	// TODO TODO: make $attr case-insensitive
+	global $Entry;
+	return isset($Entry["options"])
+		? (in_array("public=y", $Entry["options"])
+		   || in_array("display-{$attr}=y", $Entry["options"]))
+		: $default;
+}
+
+$displayMail = isAttrVisible("mail", false);
+
 $Title = H($Entry["uid"]);
 require "html-header.inc";
 ?>

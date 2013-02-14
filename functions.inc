@@ -315,6 +315,8 @@ function checkDisplaySections($attributes) {
 	$numHidden = 0;
 	$numDisplayed = 0;
 	foreach ($attributes as $section => $secAttrs) {
+		if (!$secAttrs || !count($secAttrs))
+			continue;
 		$res = checkDisplaySection($secAttrs);
 		$sections[$section] = $res[0];
 		

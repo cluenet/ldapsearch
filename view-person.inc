@@ -34,7 +34,9 @@ $totalHidden = 0;
 
 list ($sections, $numHidden, $numDisplayed) = checkDisplaySections(array(
 	// basic contact information
-	array("mail", "pgpkeyid", "altemail"),
+	$displayMail
+	? array("mail", "pgpkeyid", "altemail")
+	: array(),
 	// websites and other URLs
 	array("labeleduri"),
 	// IM addresses, &c.
