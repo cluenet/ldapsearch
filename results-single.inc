@@ -6,6 +6,9 @@ $Entry = clean_result($Entry);
 #$Entry = htmlize($Entry);
 $Entry["dn"] = ldap_get_dn($ldapConn, $res);
 
+if (isset($Entry["clueircnick"]))
+	$Entry["cluepoints"] = getCluePoints($Entry["clueircnick"]);
+
 // retrieve operational attributes
 $lsearch = @ldap_read($ldapConn, $Entry["dn"], "objectClass=*",
 	array("createTimestamp"), null, 0);

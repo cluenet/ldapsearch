@@ -13,12 +13,16 @@
 	<span class="value important"><?= $Entry["uid"] ?></span>
 </p>
 
-<?php if (ENABLE_CLUEPOINTS && has("clueircnick")): ?>
+<?php if (isset($Entry["cluepoints"])) { ?>
 <p>
 	<span class="label">Cluepoints:</span>
-	<span class="value important"><?= ($points = getCluePoints($Entry["clueircnick"])) === false ? 'unknown' : $points ?></span>
+<?php if ($Entry["cluepoints"] === false) { ?>
+	<span class="value empty">unknown</span>
+<?php } else { ?>
+	<span class="value important"><?= $Entry["cluepoints"] ?></span>
+<?php } ?>
 </p>
-<?php endif; ?>
+<?php }; ?>
 
 <?php
 if (!$More)
