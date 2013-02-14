@@ -63,9 +63,9 @@ echo condLink($View == "info", "info", "?q=".urlencode($Query))."\n";
 echo "| ".condLink($View == "account", "account", '?q='.urlencode($Query)."&view=account")."\n";
 echo "| ".condLink($View == "person", "personal", '?q='.urlencode($Query)."&view=person")."\n";
 echo "| ".condLink($View == "access", "access", '?q='.urlencode($Query)."&view=access")."\n";
-if (has('cluesshpubkey'))
+if (has('sshpublickey'))
 	echo "| ".condLink($View == "sshkeys", "SSH keys", '?q='.urlencode($Query)."&view=sshkeys")
-		." (".count($Entry['cluesshpubkey']).")\n";
+		." (".count($Entry['sshpublickey']).")\n";
 echo "| ".condLink($View == "ldif", "raw entry", '?q='.urlencode($Query)."&view=ldif");
 ?>
 </p>

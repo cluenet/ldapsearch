@@ -16,7 +16,7 @@ function snipOptions($key) {
 		return false;
 }
 
-foreach ($Entry["cluesshpubkey"] as $key):
+foreach ($Entry["sshpublickey"] as $key):
 $info = snipOptions($key);
 
 if ($info === false)
