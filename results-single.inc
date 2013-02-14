@@ -11,12 +11,29 @@ if (isset($Entry["clueircnick"]))
 
 // retrieve operational attributes
 $lsearch = @ldap_read($ldapConn, $Entry["dn"], "objectClass=*",
-	array("createTimestamp"), null, 0);
+	array("createTimestamp", "authzTo"), null, 0);
 $res = ldap_first_entry($ldapConn, $lsearch);
 $entry_op = ldap_get_attributes($ldapConn, $res);
+$Entry["authzTo"] = @$entry_op["authzTo"];
 $Entry["createTimestamp"] = ldif_parse_time($entry_op["createTimestamp"][0]);
 
 $IsSuspended = array_search('suspendedUser', $Entry['objectclass']) !== false;
+
+$Groups = array();
+$filter = "(|".
+	"(&(objectClass=groupOfNames)(member={$Entry["dn"]}))".
+	"(&(objectClass=groupOfUniqueNames)(uniqueMember={$Entry["dn"]}))".
+	")";
+$lsearch = ldap_search($ldapConn, "dc=cluenet,dc=org",
+	$filter, array("dn"), null, 0);
+for ($entry = ldap_first_entry($ldapConn, $lsearch);
+     $entry !== false;
+     $entry = ldap_next_entry($ldapConn, $entry))
+	$Groups[] = ldap_get_dn($ldapConn, $entry);
+
+$GroupDescs = array();
+#foreach ($Groups as $dn) {
+#	$lsearch = ldap_search($ldapC
 
 ///// Check for errors in LDAP entry
 $Errors = array();

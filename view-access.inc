@@ -53,6 +53,9 @@ $Access = array();
 $AccessUnknown = array();
 $AccessHidden = 0;
 
+if (!$More)
+	$AccessHidden += count($Groups);
+
 // per-server summarized shell access
 if (count($acl_shell)) {
 	$Access[] = "<abbr title=\"".implode(", ", $services_shell)."\">shell access</abbr>"
@@ -163,4 +166,18 @@ if (count($Access)) {
 		print "<p><small><a href=\"?".H($url)."\">$AccessHidden entries not shown</a></small></p>\n";
 	}
 	print "</div>\n";
+}
+
+if ($More && count($Groups) > 0) {
+	echo "<div class=\"box content\">\n";
+	echo "<h3>Group memberships</h3>\n";
+	echo "<ul>\n";
+	foreach ($Groups as $dn) {
+		if (preg_match("/,cn=svcAccess,cn=[^,]*,ou=servers,/", $dn))
+			continue;
+		else
+			echo "\t<li class=\"pre\">$dn</li>\n";
+	}
+	echo "</ul>\n";
+	echo "</div>\n";
 }
