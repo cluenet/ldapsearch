@@ -90,9 +90,7 @@ switch ($View) {
 case "info":
 case "account":
 case "person":
-case "contact":
 case "access":
-case "serveraccess":
 case "ldif":
 case "sshkeys":
 	require "view-{$View}.inc";
