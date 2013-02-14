@@ -47,7 +47,7 @@ function isAttrVisible($attr, $default=false) {
 	global $Entry;
 	return isset($Entry["options"])
 		? (in_array("public=y", $Entry["options"])
-		   || in_array("display-{$attr}=y", $Entry["options"]))
+		   || in_array("public-{$attr}=y", $Entry["options"]))
 		: $default;
 }
 
