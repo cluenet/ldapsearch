@@ -110,18 +110,6 @@ if (isset($_GET["q"])) {
 		switch (strtolower($prefix)) {
 		case 'irc':
 			$Filter = "(clueIrcNick={$q})"; break;
-		case 'xmpp':
-		case 'jabber':
-		case 'gtalk':
-			$Filter = "(xmppUri={$q})"; break;
-		case 'msn':
-		case 'msnim':
-		case 'live':
-		case 'liveim':
-		case 'wlm':
-			$Filter = "(msnSn={$q})"; break;
-		case 'aim':
-			$Filter = "(aimSn={$q})"; break;
 		case 'pgp':
 		case 'pgpkey':
 		case 'gpg':

@@ -17,10 +17,7 @@ require "html-header.inc";
 
 <!-- introductory text -->
 <div class="box content">
-<p>If you want to search for an IRC nick, prefix it with "<samp>irc:</samp>" This also works for IM addreses and pretty much all LDAP attributes.</p>
-
-<p>You can also enter LDAP filters:<br>
-<samp>(authorizedService=vpn)</samp></p>
+<p>You can also enter LDAP filters, e.g. <samp>(authorizedService=vpn)</samp></p>
 </p>
 </div>
 
