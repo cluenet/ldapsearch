@@ -23,6 +23,7 @@ $Groups = array();
 $filter = "(|".
 	"(&(objectClass=groupOfNames)(member={$Entry["dn"]}))".
 	"(&(objectClass=groupOfUniqueNames)(uniqueMember={$Entry["dn"]}))".
+	"(&(objectClass=posixGroup)(memberUid={$Entry["uid"]}))".
 	")";
 $lsearch = ldap_search($ldapConn, "dc=cluenet,dc=org",
 	$filter, array("dn"), null, 0);
