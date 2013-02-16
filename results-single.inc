@@ -72,7 +72,7 @@ function isAttrVisible($attr, $default=false) {
 		return $default;
 }
 
-$displayMail = isAttrVisible("mail", false);
+$displayMail = isAttrVisible("mail", true);
 
 $Title = H($Entry["uid"]);
 require "html-header.inc";
