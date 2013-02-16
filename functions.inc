@@ -213,6 +213,8 @@ function ldap_connect_and_do_things() {
 			$SysErrors[] = "ldap_start_tls: ".ldap_errno($ldapH)." - ".ldap_error($ldapH);
 		}
 	}
+
+	@ldap_set_option($ldapH, LDAP_OPT_DEREF, LDAP_DEREF_ALWAYS);
 	
 	if (isset($_SERVER["KRB5CCNAME"])) {
 		putenv("KRB5CCNAME=".$_SERVER["KRB5CCNAME"]);
