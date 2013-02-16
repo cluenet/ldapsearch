@@ -45,10 +45,31 @@ $Entry['gidnumber'] = intval($Entry['gidnumber']);
 function isAttrVisible($attr, $default=false) {
 	// TODO TODO: make $attr case-insensitive
 	global $Entry;
-	return isset($Entry["options"])
-		? (in_array("public=y", $Entry["options"])
-		   || in_array("public-{$attr}=y", $Entry["options"]))
-		: $default;
+
+	if (!isset($Entry["options"]))
+		return $default;
+
+	$key = strtolower("public-$attr");
+	$global = null;
+	$override = null;
+	foreach ($Entry["options"] as $item) {
+		$item = explode("=", $item, 2);
+		if (count($item) != 2)
+			continue;
+		list ($k, $v) = $item;
+
+		if ($k == "public")
+			$global = ($v == "y");
+		elseif (strtolower($k) === $key)
+			$override = ($v == "y");
+	}
+
+	if ($override !== null)
+		return $override;
+	elseif ($global !== null)
+		return $global;
+	else
+		return $default;
 }
 
 $displayMail = isAttrVisible("mail", false);
