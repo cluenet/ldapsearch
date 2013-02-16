@@ -141,6 +141,8 @@ else {
 	$Query = false;
 }
 
+$Filter = "(&{$Filter}(objectClass=cluenetUser))";
+
 if ($Query) {
 	$NumResults = -1;
 	$ldapConn = ldap_connect_and_do_things();
