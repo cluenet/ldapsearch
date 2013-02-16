@@ -100,8 +100,11 @@ if (has("jpegphoto")) {
 	echo "<h1>".H($Name)."</h1>\n";
 	if ($Name != $Entry["uid"])
 		echo "<div id=\"realname\">".H($Entry["uid"])."</div>\n";
+	else
+		echo "<div id=\"realname\">&nbsp;</div>\n";
 } else {
 	echo "<h1>".H($Entry["uid"])."</h1>\n";
+	echo "<div id=\"realname\">&nbsp;</div>\n";
 } ?>
 </div>
 <div style="clear: both;"></div>
