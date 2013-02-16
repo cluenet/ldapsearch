@@ -168,16 +168,24 @@ if (count($Access)) {
 	print "</div>\n";
 }
 
-if ($More && count($Groups) > 0) {
+$visibleGroups = array();
+foreach ($Groups as $dn) {
+	if (preg_match("/,cn=svcAccess,cn=[^,]*,ou=servers,/", $dn))
+		continue;
+	else
+		$visibleGroups[] = $dn;
+}
+
+if ($More) {
 	echo "<div class=\"box content\">\n";
 	echo "<h3>Group memberships</h3>\n";
-	echo "<ul>\n";
-	foreach ($Groups as $dn) {
-		if (preg_match("/,cn=svcAccess,cn=[^,]*,ou=servers,/", $dn))
-			continue;
-		else
+	if (count($visibleGroups) > 0) {
+		echo "<ul>\n";
+		foreach ($visibleGroups as $dn)
 			echo "\t<li class=\"pre\">$dn</li>\n";
+		echo "</ul>\n";
+	} else {
+		echo "<p class=\"comment\">No groups.</p>\n";
 	}
-	echo "</ul>\n";
 	echo "</div>\n";
 }
