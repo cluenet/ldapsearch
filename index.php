@@ -121,7 +121,7 @@ if (isset($_GET["q"])) {
 	}
 	// username
 	else {
-		$Filter = "(uid={$Query})";
+		$Filter = "(|(uid={$Query})(clueIrcNick={$Query}))";
 	}
 }
 // ...or show the welcome page.
