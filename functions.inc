@@ -350,7 +350,7 @@ function implode_e($array) {
 function plural($count, $noun) {
 	if (is_array($count))
 		$count = count($count);
-	if ($count == 1)
+	if ($count == 1 || ($count % 10 == 1 && $count % 100 != 11))
 		return $noun;
 	elseif (substr($noun, -1) == "y")
 		return substr($noun, 0, -1)."ies";

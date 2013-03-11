@@ -2,45 +2,70 @@
 <?php
 $More = ($View == "access");
 
-define("PRIV_DEPRECATED", "<em>(old)</em> ");
-define("PRIV_OBSOLETE", "<em>(obsolete)</em> ");
+const PRIV_IMPORTANT	= 1;
+const PRIV_OBSOLETE	= 2;
+const PRIV_UNKNOWN	= 4;
 
 # Privileges only shown in extended view
 # 0: display in info
 # 1: display in "Access" tab (default)
 # 2: do not display
 $AllPrivileges = array(
-	'marriage'		=> array( 1, "marriage" ),
+	'ssh'			=> [PRIV_OBSOLETE,	"<strong class=\"service\">SSH</strong> login (Debian Etch)"],
+	'sshd'			=> [0,			"<strong class=\"service\">SSH</strong> login"],
+	'login'			=> [0,			"console and 'telnet' login"],
+	'cron'			=> [2,			"use of <strong class=\"service\">crontab</strong>"],
+	'atd'			=> [0,			"use of <strong class=\"service\">'at'</strong> daemon"],
+	'chfn'			=> [PRIV_OBSOLETE,	"use of <strong class=\"service\">'chfn'</strong> command"],
+	'chsh'			=> [PRIV_OBSOLETE,	"use of <strong class=\"service\">'chsh'</strong> command"],
 
-	'ssh'			=> array( 2, PRIV_OBSOLETE."SSH access (Debian Etch)" ),
-	'sshd'			=> array( 2, PRIV_OBSOLETE."SSH access" ),
-	'sudo'			=> array( 2, PRIV_OBSOLETE."sudo" ),
-	'login'			=> array( 2, PRIV_OBSOLETE."console login" ),
-	'su'			=> array( 2, PRIV_OBSOLETE."su" ),
-	'cron'			=> array( 2, PRIV_OBSOLETE."crontab" ),
-	'atd'			=> array( 2, PRIV_OBSOLETE."'at' daemon" ),
-	'chfn'			=> array( 2, PRIV_OBSOLETE."chfn" ),
-	'chsh'			=> array( 2, PRIV_OBSOLETE."chsh" ),
+	'mail'			=> [PRIV_OBSOLETE,	"Cluenet.org <strong class=\"service\">mail</strong>"],
+	'wiki'			=> [0,			"edit access on <strong class=\"service\">Cluewiki</strong>"],
+	'forum'			=> [PRIV_OBSOLETE,	"Cluenet <a href=\"http://forum.cluenet.org/\">forum</a>"],
+	'bugs'			=> [PRIV_OBSOLETE,	"Cluenet Bugzilla"],
+	'cacti'			=> [PRIV_OBSOLETE,	"Cacti – server stats"],
+	'vps'			=> [PRIV_OBSOLETE,	"Cobi's <strong class=\"service\">VPS</strong> service"],
 
-	'mail'			=> array( 2, PRIV_OBSOLETE."Cluenet.org mail" ),
-	'wiki'			=> array( 2, "wiki" ),
-	'forum'			=> array( 2, PRIV_OBSOLETE."<a href=\"http://forum.cluenet.org/\">forum</a>" ),
-	'bugs'			=> array( 2, PRIV_OBSOLETE."Bugzilla" ),
-	'cacti'			=> array( 2, PRIV_OBSOLETE."Cacti stats" ),
-	'vps'			=> array( 1, PRIV_OBSOLETE."CobiVPS" ),
+	'createacct'		=> [PRIV_OBSOLETE,	"approval of new accounts (acctshell v2)"],
+	'sshvote'		=> [PRIV_OBSOLETE,	"voting on shell applications – acctshell v2"],
+	'sshapprove'		=> [PRIV_OBSOLETE,	"approval of shell applications – acctshell v2"],
+	'sshvoteoverride'	=> [PRIV_OBSOLETE,	"overriding shell application votes – acctshell v2"],
 
-	'createacct'		=> array( 2, PRIV_OBSOLETE."approval of new accounts" ),
-	'sshvote'		=> array( 2, PRIV_OBSOLETE."voting on shell applications" ),
-	'sshapprove'		=> array( 2, PRIV_OBSOLETE."approval of shell applications" ),
-	'sshvoteoverride'	=> array( 2, PRIV_OBSOLETE."overriding shell application votes" ),
+	'initialvouch'		=> [PRIV_OBSOLETE,	"vouching for new accounts – acctshell v3"],
+	'acctvote'		=> [PRIV_OBSOLETE,	"voting for new account creation – acctshell v3"],
 
-	'acct^acctvote'		=> array( 0, "voting on access applications" ),
-	'dns^'			=> array( 1, "DNS control of <code>{}</code>" ),
-	'dns^cluenet.org.'	=> array( 0, null ),
-	'dns^in-addr.arpa.'	=> array( 0, null ),
-	'tokengen^'		=> array( 2, "access token generation for <code>{}</code>" ),
-	'vpnpanel^'		=> array( 1, "VPN control of <code>{}</code>" ),
+	'acct^initvote'		=> [PRIV_OBSOLETE,	"voting for new account creation – acctshell v4"],
+	'acct^acctvote'		=> [PRIV_OBSOLETE,	"voting on access applications – acctshell v4"],
+
+	'dns^'			=> [PRIV_OBSOLETE,	"control of <code>{}</code> <strong class=\"service\">DNS domain</strong> – acctshell v4"],
+	'tokengen^'		=> [PRIV_OBSOLETE,	"access token generation for <code>{}</code> – acctshell v4"],
+	'vpnpanel^'		=> [PRIV_OBSOLETE,	"<strong class=\"service\">ClueVPN BNL</strong> entry for <code>{}</code> – acctshell v4"],
 );
+
+function describe_service($service) {
+	global $AllPrivileges;
+	// split type^value ("acct^acctvote") for labelling purposes
+	$svc_type = strtok($service, "^")."^";
+	$svc_value = strtok(null);
+
+	// get importance level and display name
+	// for type^value, fall back to just type
+	if (isset($AllPrivileges[$service])) {
+		list ($level, $name) = $AllPrivileges[$service];
+		if ($name === null and isset($AllPrivileges[$svc_type])) {
+			$name = $AllPrivileges[$svc_type][1];
+		}
+	} elseif (isset($AllPrivileges[$svc_type])) {
+		list ($level, $name) = $AllPrivileges[$svc_type];
+	} else {
+		$level = PRIV_UNKNOWN;
+		$name = "(unknown service) <strong class=\"service\">$service</strong>";
+	}
+
+	$name = str_replace('{}', htmlspecialchars($svc_value), $name);
+
+	return [$level, $name];
+}
 
 function find_acls($user_dn) {
 	global $ldapConn;
@@ -87,137 +112,15 @@ foreach ($acl_servers as $host => &$services) {
 	}
 }
 
-$acl_host = $Entry["host"];
+if (has("host"))
+	$acl_host = $Entry["host"];
+else
+	$acl_host = array();
 sort($acl_host);
 
 //// prepare everything for display
 $Access = array();
-$AccessUnknown = array();
 $AccessHidden = 0;
-
-if (!$More)
-	$AccessHidden += count($Groups);
-
-$do_comment = strprefix("<span class=\"comment\">(", ")</span>");
-
-// host-based access
-if (count($acl_host)) {
-	$comment = "<code>'host'</code> attribute";
-	if ($More) {
-		foreach ($acl_host as $host) {
-			$Access[] = ["host access to <i>$host</i>", $comment];
-		}
-	} else {
-		$hosts = implode_e(strprefix_a($acl_host, "<i>", "</i>"));
-		$Access[] = ["host access to $hosts", $comment];
-	}
-}
-
-// per-server summarized shell access
-if (count($acl_shell)) {
-	$comment = $do_comment("ACL entries");
-	$hosts = implode_e(strprefix_a($acl_shell, "<i>", "</i>"));
-	$Access[] = ["<abbr title=\"".implode(", ", $services_shell)."\">shell access</abbr> on $hosts", "ACL entries"];
-}
-
-// old-style shell access
-if (in_array("sshd", $acl_misc)) {
-	$Access[] = ["shell access on servers which use <code>'authorizedService'</code>", null];
-}
-
-// per-server non-"shell" services
-// also "shell" services when the "shell access" set is incomplete
-if (count($acl_server_misc)) {
-	foreach ($acl_server_misc as $host => $services) {
-		if ($More) {
-			if (count($services))
-				$Access[] = ["services ".implode_e($services)." on <i>$host</i>", "ACL entries"];
-		} else $AccessHidden += count($services);
-	}
-}
-
-const PRIV_SHOW_ALWAYS		= 0;
-const PRIV_SHOW_TAB		= 1;
-const PRIV_SHOW_DETAILED	= 2;
-const PRIV_UNKNOWN		= 3;
-
-// global privileges
-foreach ($acl_misc as $service) {
-	// split type^value ("acct^acctvote") for labelling purposes
-	$svc_type = strtok($service, "^")."^";
-	$svc_value = strtok(null);
-
-	// get importance level and display name
-	// for type^value, fall back to just type
-	if (isset($AllPrivileges[$service])) {
-		list ($level, $name) = $AllPrivileges[$service];
-		if ($name === null and isset($AllPrivileges[$svc_type])) {
-			$name = $AllPrivileges[$svc_type][1];
-		}
-	} elseif (isset($AllPrivileges[$svc_type])) {
-		list ($level, $name) = $AllPrivileges[$svc_type];
-	} else {
-		$level = PRIV_UNKNOWN;
-	}
-
-	// display entries based on their importance
-	if ($level >= PRIV_UNKNOWN) {
-		$AccessUnknown[] = $service;
-	}
-	elseif ($level >= PRIV_SHOW_TAB and !$More) {
-		# show only in 'access' tab
-		$AccessHidden++;
-	} else {
-		$name = str_replace('{}', htmlspecialchars($svc_value), $name);
-
-		if ($service == "mail" and isset($Entry["mailquota"])) {
-				$name = "$name <em>(quota: ".formatQuota($Entry["mailquota"]).")</em>";
-		}
-
-		$comment = "<code>'$service'</code> service";
-
-		$Access[] = [$name, $comment];
-	}
-}
-
-// don't forget services we know nothing about
-foreach ($AccessUnknown as $service) {
-	$Access[] = ["<em>(unknown service)</em> <code>$service</code>", null];
-}
-
-if (count($Access)) {
-	print "<div class=\"box content\">\n";
-	print "<h2>Access rights</h2>\n";
-	print "<ul>\n";
-	foreach ($Access as $line) {
-		list ($text, $comment) = $line;
-		$line = $text;
-		if ($More && strlen($comment))
-			$line .= " <span class=\"comment\">($comment)</span>";
-		print "\t<li>$line</li>\n";
-	}
-	print "</ul>\n";
-	if ($AccessHidden) {
-		if ($More)
-			$url = mangle_query(array("more" => null));
-		else
-			$url = mangle_query(array("view" => "access"));
-		print "<p class=\"more\"><a href=\"?".H($url)."\">$AccessHidden entries not shown</a></p>\n";
-	}
-	print "</div>\n";
-} elseif ($More) {
-	print "<div class=\"box content\">\n";
-	print "<h2>Access rights</h2>\n";
-	print "<p>Nothing to display.</p>\n";
-	if ($AccessHidden) {
-		if ($More)
-			$url = mangle_query(array("more" => null));
-		else
-			$url = mangle_query(array("view" => "access"));
-		print "<p class=\"more\"><a href=\"?".H($url)."\">$AccessHidden entries not shown</a></p>\n";
-	}
-	print "</div>\n";
-}
 
 $visibleGroups = array();
 foreach ($Groups as $dn) {
@@ -225,6 +128,146 @@ foreach ($Groups as $dn) {
 		continue;
 	else
 		$visibleGroups[] = $dn;
+}
+
+if (!$More)
+	$AccessHidden += count($visibleGroups);
+
+// host-based access
+
+if (count($acl_host)) {
+	$tmp_local = array();
+	$tmp_other = array();
+	foreach ($acl_host as $host) {
+		$short = trim_domain($host);
+		if ($host === $short)
+			$tmp_other[] = $host;
+		else
+			$tmp_local[] = $short;
+	}
+	sort($tmp_local);
+	sort($tmp_other);
+	$acl_host = array_merge($tmp_local, $tmp_other);
+	$hosts_s = implode_e(strprefix_a($acl_host, "<code class=\"host\"><u>", "</u></code>"));
+	if ($More) {
+		$Access[] = ["<strong class=\"service\">host access</strong> to $hosts_s",
+			     "\"host\" attribute",
+			     "Granted by the \"host\" attribute on the user's account."];
+	} else {
+		$Access[] = ["host access to $hosts_s"];
+	}
+}
+
+// per-server summarized shell access
+
+if (count($acl_shell)) {
+	$hosts_s = implode_e(strprefix_a($acl_shell, "<code class=\"host\"><u>", "</u></code>"));
+	$services_s = implode(", ", $services_shell);
+	if ($More) {
+		$Access[] = ["<strong class=\"service\">shell access</strong> on $hosts_s",
+			     "ACL entries",
+			     "Granted by multiple ACL entries [$services_s] on the server's ACL subtree."];
+	} else {
+		$Access[] = ["shell access on $hosts_s"];
+	}
+}
+
+// old-style shell access
+
+if (!$More && in_array("sshd", $acl_misc)) {
+	$Access[] = ["shell access on servers which use 'authorizedService'",
+		     "<code>\"sshd\"</code> service",
+		     "Granted by the \"authorizedService\" attribute on the user's account. Only some servers use this attribute."];
+}
+
+// per-server non-"shell" services
+// also "shell" services when the "shell access" set is incomplete
+
+if (count($acl_server_misc)) {
+	foreach ($acl_server_misc as $host => $services) {
+		if ($More && count($services)) {
+			foreach ($services as $service) {
+				list ($level, $name) = describe_service($service);
+				$Access[] = ["$name on <code class=\"host\"><u>$host</u></code>",
+					     "<code>\"$service\"</code>",
+					     "Granted by ACL entry \"$service\" in the server's ACL subtree."];
+			}
+			//$services_s = implode(", ", $services);
+			//$services_hs = implode_e(strprefix_a($services, "<code>\"", "\"</code>"));
+			//$Access[] = [plural($services, "unknown service")." $services_hs on <i>$host</i>",
+			//	     "ACL entries",
+			//	     "Granted by ACL ".plural($services, "entry")." [$services_s] in the server's ACL subtree."];
+		} else $AccessHidden += count($services) ? 1 : 0;
+	}
+}
+
+// global privileges
+
+$AccessUnknown = array();
+$AccessObsolete = array();
+
+foreach ($acl_misc as $service) {
+	list ($level, $name) = describe_service($service);
+
+	if (@in_array($service, $Entry["clueauthorizedability"]))
+		$attr = "clue­Authorized­Ability";
+	else
+		$attr = "authorized­Service";
+
+	$note = "<code>\"$service\"</code>";
+	$comment = "Service \"$service\" in\nthe \"$attr\" attribute\non the user's account.";
+
+	// display entries based on their importance
+	if ($level & PRIV_IMPORTANT || $More) {
+		if ($service == "mail" and isset($Entry["mailquota"])) {
+				$name = "$name <em>(quota: ".formatQuota($Entry["mailquota"]).")</em>";
+		}
+
+		if ($level & PRIV_OBSOLETE) {
+			$name = "<small>(historical)</small> ".$name;
+			$AccessObsolete[] = [$name, $note, $comment];
+			continue;
+		}
+		$Access[] = [$name, $note, $comment];
+	} else {
+		$AccessHidden++;
+	}
+}
+
+foreach ($AccessObsolete as $item)
+	$Access[] = $item;
+if ($More)
+	foreach ($AccessUnknown as $item)
+		$Access[] = $item;
+
+if (count($Access) || $More) {
+	print "<div class=\"box content\">\n";
+	print "<h2>Access rights</h2>\n";
+	if (count($Access)) {
+		print "<ul>\n";
+		foreach ($Access as $item) {
+			@list ($text, $note, $comment) = $item;
+			$line = $text;
+			if ($More && strlen($note)) {
+				$span = "span class=\"comment\"";
+				if (strlen($comment))
+					$span .= " title=\"".H($comment)."\"";
+				$line .= " <$span>(".$note.")</span>";
+			}
+			print "\t<li>$line</li>\n";
+		}
+		print "</ul>\n";
+	} else {
+		print "<p>Nothing to display.</p>\n";
+	}
+	if ($AccessHidden) {
+		if ($More)
+			$url = mangle_query(array("more" => null));
+		else
+			$url = mangle_query(array("view" => "access"));
+		print "<p class=\"more\"><a href=\"?".H($url)."\">details – ".plural_s($AccessHidden, "entry")." not shown</a></p>\n";
+	}
+	print "</div>\n";
 }
 
 if ($More) {
@@ -236,7 +279,11 @@ if ($More) {
 			echo "\t<li class=\"pre\">$dn</li>\n";
 		echo "</ul>\n";
 	} else {
-		echo "<p class=\"comment\">No groups.</p>\n";
+		echo "<p>No groups.</p>\n";
+	}
+	$numHiddenGroups = count($Groups) - count($visibleGroups);
+	if ($numHiddenGroups > 0) {
+		echo "<p class=\"comment\">".plural_s($numHiddenGroups, "other group")." are already summarized above.</p>";
 	}
 	echo "</div>\n";
 }
