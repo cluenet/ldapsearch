@@ -6,6 +6,9 @@
 	<title><?php if (strlen($Title)) echo "$Title - "; ?>ClueLDAP</title>
 	<meta name="author" content="Mantas Mikulėnas">
 	<style>
+	body {
+		overflow-y: scroll;
+	}
 	pre, code {
 		font-family: Consolas, "DejaVu Mono", monospace;
 	}
