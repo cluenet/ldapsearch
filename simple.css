@@ -3,9 +3,9 @@ body {
 	font-size: 10pt;
 	background: #fff;
 	color: #000;
-	/*max-width: 650px;
+	max-width: 750px;
 	margin-left: auto;
-	margin-right: auto;*/
+	margin-right: auto;
 }
 .error { color: #f33; }
 .pre {
