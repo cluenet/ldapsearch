@@ -5,8 +5,9 @@ const LDAP_STARTTLS = false;
 
 const BASE_DN = "dc=cluenet,dc=org";
 const SASL_REALM = "CLUENET.ORG";
-const BIND_DN = false;
-const BIND_PASS = false;
+#const BIND_DN = false;
+#const BIND_PASS = false;
+require "config.inc.local";
 
 const ENABLE_CLUEPOINTS = true;
 const CB_SERVER = "virgule.cluenet.org";
