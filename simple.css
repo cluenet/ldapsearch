@@ -81,3 +81,6 @@ input.sshkey {
 	font-family: monospace;
 	width: 99%;
 }
+.comment {
+	color: rgba(0,0,0,0.5);
+}

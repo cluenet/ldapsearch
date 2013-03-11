@@ -96,6 +96,9 @@ input.sshkey {
 	font-family: monospace;
 	width: 99%;
 }
+.comment {
+	color: rgba(255,255,255,0.5);
+}
 
 .label {
 	font-weight: bold;

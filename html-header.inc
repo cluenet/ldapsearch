@@ -13,9 +13,6 @@
 	.value.important {
 		font-weight: bold;
 	}
-	.comment {
-		font-style: italic;
-	}
 	.value.error {
 		color: red;
 	}
