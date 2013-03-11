@@ -1,7 +1,6 @@
 <!-- BEGIN single/access -->
 <?php
 $More = ($View == "access");
-$EvenMore = $More && isset($_GET["more"]);
 
 function find_acls($user_dn) {
 	global $ldapConn;
@@ -122,15 +121,8 @@ foreach ($acl_misc as $service) {
 	}
 
 	// display entries based on their importance
-	if ($level >= PRIV_UNKNOWN and $EvenMore) {
+	if ($level >= PRIV_UNKNOWN) {
 		$AccessUnknown[] = $service;
-	}
-	elseif ($level >= PRIV_UNKNOWN) {
-		$AccessHidden++;
-	}
-	elseif ($level >= PRIV_SHOW_DETAILED and !$EvenMore) {
-		# show only in extended view of 'access'
-		$AccessHidden++;
 	}
 	elseif ($level >= PRIV_SHOW_TAB and !$More) {
 		# show only in 'access' tab
