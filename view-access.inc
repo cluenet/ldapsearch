@@ -215,7 +215,7 @@ foreach ($acl_misc as $service) {
 		$attr = "authorized­Service";
 
 	$note = "<code>\"$service\"</code>";
-	$comment = "Service \"$service\" in\nthe \"$attr\" attribute\non the user's account.";
+	$comment = "Granted by \"$service\" in\nthe \"$attr\" attribute\non the user's account.";
 
 	// display entries based on their importance
 	if ($level & PRIV_IMPORTANT || $More) {
