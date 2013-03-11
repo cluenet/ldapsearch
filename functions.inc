@@ -347,9 +347,21 @@ function implode_e($array) {
 	return $s;
 }
 
-# Damn useful.
 function plural($count, $noun) {
-	return $count == 1 ? $noun : $noun."s";
+	if (is_array($count))
+		$count = count($count);
+	if ($count == 1)
+		return $noun;
+	elseif (substr($noun, -1) == "y")
+		return substr($noun, 0, -1)."ies";
+	else
+		return $noun."s";
+}
+
+function plural_s($count, $noun) {
+	if (is_array($count))
+		$count = count($count);
+	return $count." ".plural($count, $noun);
 }
 
 function trim_domain($fqdn, $domain=".cluenet.org") {
