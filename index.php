@@ -129,7 +129,8 @@ else {
 	$Query = false;
 }
 
-$Filter = "(&{$Filter}(objectClass=cluenetUser))";
+if (strlen(@$Filter))
+	$Filter = "(&{$Filter}(objectClass=cluenetUser))";
 
 if ($Query) {
 	$NumResults = -1;
