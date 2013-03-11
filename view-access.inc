@@ -48,6 +48,9 @@ foreach ($acl_servers as $host => &$services) {
 	}
 }
 
+$acl_host = $Entry["host"];
+sort($acl_host);
+
 //// prepare everything for display
 $Access = array();
 $AccessUnknown = array();
@@ -56,17 +59,31 @@ $AccessHidden = 0;
 if (!$More)
 	$AccessHidden += count($Groups);
 
+$do_comment = strprefix("<span class=\"comment\">(", ")</span>");
+
+// host-based access
+if (count($acl_host)) {
+	$comment = "<code>'host'</code> attribute";
+	if ($More) {
+		foreach ($acl_host as $host) {
+			$Access[] = ["host access to <i>$host</i>", $comment];
+		}
+	} else {
+		$hosts = implode_e(strprefix_a($acl_host, "<i>", "</i>"));
+		$Access[] = ["host access to $hosts", $comment];
+	}
+}
+
 // per-server summarized shell access
 if (count($acl_shell)) {
-	$Access[] = "<abbr title=\"".implode(", ", $services_shell)."\">shell access</abbr>"
-		." on ".implode_e(array_map(function($x) {return "<i>$x</i>";}, $acl_shell));
+	$comment = $do_comment("ACL entries");
+	$hosts = implode_e(strprefix_a($acl_shell, "<i>", "</i>"));
+	$Access[] = ["<abbr title=\"".implode(", ", $services_shell)."\">shell access</abbr> on $hosts", "ACL entries"];
 }
 
 // old-style shell access
 if (in_array("sshd", $acl_misc)) {
-	if ($More) {
-		$Access[] = PRIV_DEPRECATED."shell access on servers still using <code>authorizedService</code>";
-	} else $AccessHidden++;
+	$Access[] = ["shell access on servers which use <code>'authorizedService'</code>", null];
 }
 
 // per-server non-"shell" services
@@ -75,15 +92,15 @@ if (count($acl_server_misc)) {
 	foreach ($acl_server_misc as $host => $services) {
 		if ($More) {
 			if (count($services))
-				$Access[] = implode_e($services)." on <i>$host</i>";
+				$Access[] = ["services ".implode_e($services)." on <i>$host</i>", "ACL entries"];
 		} else $AccessHidden += count($services);
 	}
 }
 
 const PRIV_SHOW_ALWAYS		= 0;
-const PRIV_SHOW_TAB			= 1;
+const PRIV_SHOW_TAB		= 1;
 const PRIV_SHOW_DETAILED	= 2;
-const PRIV_UNKNOWN			= 3;
+const PRIV_UNKNOWN		= 3;
 
 // global privileges
 foreach ($acl_misc as $service) {
@@ -125,32 +142,35 @@ foreach ($acl_misc as $service) {
 				$name = "$name <em>(quota: ".formatQuota($Entry["mailquota"]).")</em>";
 		}
 
-		if ($More)
-			$name .= " (<code>$service</code>)";
+		$comment = "<code>'$service'</code> service";
 
-		$Access[] = $name;
+		$Access[] = [$name, $comment];
 	}
 }
 
 // don't forget services we know nothing about
 foreach ($AccessUnknown as $service) {
-	$Access[] = "<em>(unknown service)</em> <code>$service</code>";
+	$Access[] = ["<em>(unknown service)</em> <code>$service</code>", null];
 }
 
 if (count($Access)) {
 	print "<div class=\"box content\">\n";
 	print "<h2>Access rights</h2>\n";
 	print "<ul>\n";
-	foreach ($Access as $line)
+	foreach ($Access as $line) {
+		list ($text, $comment) = $line;
+		$line = $text;
+		if ($More && strlen($comment))
+			$line .= " <span class=\"comment\">($comment)</span>";
 		print "\t<li>$line</li>\n";
+	}
 	print "</ul>\n";
 	if ($AccessHidden) {
-		if ($More) {
+		if ($More)
 			$url = mangle_query(array("more" => null));
-		} else {
+		else
 			$url = mangle_query(array("view" => "access"));
-		}
-		print "<p><small><a href=\"?".H($url)."\">$AccessHidden entries not shown</a></small></p>\n";
+		print "<p class=\"more\"><a href=\"?".H($url)."\">$AccessHidden entries not shown</a></p>\n";
 	}
 	print "</div>\n";
 } elseif ($More) {
@@ -158,12 +178,11 @@ if (count($Access)) {
 	print "<h2>Access rights</h2>\n";
 	print "<p>Nothing to display.</p>\n";
 	if ($AccessHidden) {
-		if ($More) {
+		if ($More)
 			$url = mangle_query(array("more" => null));
-		} else {
+		else
 			$url = mangle_query(array("view" => "access"));
-		}
-		print "<p><small><a href=\"?".H($url)."\">$AccessHidden entries not shown</a></small></p>\n";
+		print "<p class=\"more\"><a href=\"?".H($url)."\">$AccessHidden entries not shown</a></p>\n";
 	}
 	print "</div>\n";
 }

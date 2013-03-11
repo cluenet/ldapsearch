@@ -27,6 +27,16 @@ function mangle_query($add, $remove=null) {
 	return my_build_query($query);
 }
 
+function strprefix($prefix, $suffix="") {
+	return function($str) use($prefix, $suffix) {
+		return $prefix.$str.$suffix;
+	};
+}
+
+function strprefix_a($array, $prefix, $suffix="") {
+	return array_map(strprefix($prefix, $suffix), $array);
+}
+
 function strptime_sane($date, $format) {
 	$time_t = (object) strptime($date, $format);
 	return mktime(
