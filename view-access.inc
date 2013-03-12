@@ -2,69 +2,109 @@
 <?php
 $More = ($View == "access");
 
-const PRIV_IMPORTANT	= 1;
-const PRIV_OBSOLETE	= 2;
-const PRIV_UNKNOWN	= 4;
+const P_IMPORTANT	= 1;
+const P_OBSOLETE	= 2;
+const P_UNKNOWN	= 4;
 
 # Privileges only shown in extended view
 # 0: display in info
 # 1: display in "Access" tab (default)
 # 2: do not display
 $AllPrivileges = array(
-	'ssh'			=> [PRIV_OBSOLETE,	"<strong class=\"service\">SSH</strong> login (Debian Etch)"],
-	'sshd'			=> [0,			"<strong class=\"service\">SSH</strong> login"],
-	'login'			=> [0,			"console and 'telnet' login"],
-	'cron'			=> [2,			"use of <strong class=\"service\">crontab</strong>"],
-	'atd'			=> [0,			"use of <strong class=\"service\">'at'</strong> daemon"],
-	'chfn'			=> [PRIV_OBSOLETE,	"use of <strong class=\"service\">'chfn'</strong> command"],
-	'chsh'			=> [PRIV_OBSOLETE,	"use of <strong class=\"service\">'chsh'</strong> command"],
-
-	'mail'			=> [PRIV_OBSOLETE,	"Cluenet.org <strong class=\"service\">mail</strong>"],
-	'wiki'			=> [0,			"edit access on <strong class=\"service\">Cluewiki</strong>"],
-	'forum'			=> [PRIV_OBSOLETE,	"Cluenet <a href=\"http://forum.cluenet.org/\">forum</a>"],
-	'bugs'			=> [PRIV_OBSOLETE,	"Cluenet Bugzilla"],
-	'cacti'			=> [PRIV_OBSOLETE,	"Cacti – server stats"],
-	'vps'			=> [PRIV_OBSOLETE,	"Cobi's <strong class=\"service\">VPS</strong> service"],
-
-	'createacct'		=> [PRIV_OBSOLETE,	"approval of new accounts (acctshell v2)"],
-	'sshvote'		=> [PRIV_OBSOLETE,	"voting on shell applications – acctshell v2"],
-	'sshapprove'		=> [PRIV_OBSOLETE,	"approval of shell applications – acctshell v2"],
-	'sshvoteoverride'	=> [PRIV_OBSOLETE,	"overriding shell application votes – acctshell v2"],
-
-	'initialvouch'		=> [PRIV_OBSOLETE,	"vouching for new accounts – acctshell v3"],
-	'acctvote'		=> [PRIV_OBSOLETE,	"voting for new account creation – acctshell v3"],
-
-	'acct^initvote'		=> [PRIV_OBSOLETE,	"voting for new account creation – acctshell v4"],
-	'acct^acctvote'		=> [PRIV_OBSOLETE,	"voting on access applications – acctshell v4"],
-
-	'dns^'			=> [PRIV_OBSOLETE,	"control of <code>{}</code> <strong class=\"service\">DNS domain</strong> – acctshell v4"],
-	'tokengen^'		=> [PRIV_OBSOLETE,	"access token generation for <code>{}</code> – acctshell v4"],
-	'vpnpanel^'		=> [PRIV_OBSOLETE,	"<strong class=\"service\">ClueVPN BNL</strong> entry for <code>{}</code> – acctshell v4"],
+	// services that apply both to server ACLs and globally
+	'atd@'			=> [0,		"use of <strong class=\"service\">'at'</strong> daemon"],
+	'chfn@'			=> [P_OBSOLETE,	"use of <strong class=\"service\">'chfn'</strong> command",
+						"This is mostly useless as the information is stored in LDAP,"
+						." and 'chfn' does not know how to change it."],
+	'chsh@'			=> [P_OBSOLETE,	"use of <strong class=\"service\">'chsh'</strong> command",
+						"This is mostly useless as the information is stored in LDAP,"
+						." and 'chsh' does not know how to change it."],
+	'cron@'			=> [0,		"use of <strong class=\"service\">crontab</strong>"],
+	'ftp@'			=> [0,		"access to <strong class=\"service\">FTP</strong> file transfer"],
+	'login@'		=> [0,		"console and 'telnet' login"],
+	'passwd@'		=> [P_OBSOLETE,	"use of <strong class=\"service\">'passwd'</strong> command",
+						"This is mostly useless as passwords are changed directly"
+						." using Kerberos."],
+	'samba@'		=> [0,		"access to <strong class=\"service\">Samba</strong> file server"],
+	'ssh@'			=> [P_OBSOLETE,	"<strong class=\"service\">SSH</strong> login, for Debian Etch"],
+	'sshd@'			=> [0,		"<strong class=\"service\">SSH</strong> (shell) login"],
+	// global services
+	'bugs'			=> [P_OBSOLETE,	"Cluenet Bugzilla"],
+	'cacti'			=> [P_OBSOLETE,	"Cacti – server stats"],
+	'forum'			=> [P_OBSOLETE,	"Cluenet <a href=\"http://forum.cluenet.org/\">forum</a>"],
+	'mail'			=> [P_OBSOLETE,	"Cluenet.org <strong class=\"service\">mail</strong>"],
+	'vps'			=> [P_OBSOLETE,	"Cobi's <strong class=\"service\">VPS</strong> service"],
+	'wiki'			=> [0,		"edit access on <strong class=\"service\">Cluewiki</strong>"],
+	// acctshell v2 abilities
+	'createacct'		=> [P_OBSOLETE,	"approval of new accounts – acctshell v2"],
+	'sshvote'		=> [P_OBSOLETE,	"voting on shell applications – acctshell v2"],
+	'sshapprove'		=> [P_OBSOLETE,	"approval of shell applications – acctshell v2"],
+	'sshvoteoverride'	=> [P_OBSOLETE,	"overriding shell application votes – acctshell v2"],
+	// acctshell v3 abilities
+	'initialvouch'		=> [P_OBSOLETE,	"vouching for new accounts – acctshell v3"],
+	'acctvote'		=> [P_OBSOLETE,	"voting for new account creation – acctshell v3"],
+	// acctshell v4 abilities -- accounts
+	'acct^initvote'		=> [P_OBSOLETE,	"voting for new account creation – acctshell v4"],
+	'acct^acctvote'		=> [P_OBSOLETE,	"voting on access applications – acctshell v4"],
+	// acctshell v4 abilities -- misc
+	'dns^'			=> [P_OBSOLETE,	"control of <code>{}</code> <strong class=\"service\">DNS domain</strong> – acctshell v4"],
+	'tokengen^'		=> [P_OBSOLETE,	"access token generation for <code>{}</code> – acctshell v4"],
+	'vpnpanel^'		=> [P_OBSOLETE,	"<strong class=\"service\">ClueVPN BNL</strong> entry for <code>{}</code> – acctshell v4"],
 );
 
 function describe_service($service) {
 	global $AllPrivileges;
-	// split type^value ("acct^acctvote") for labelling purposes
+
+	/* SERVICE	DESCRIBED BY
+	 *
+	 * foo@bar	foo@bar, foo@
+	 * foo^bar	foo^bar, foo^
+	 * foo		foo, foo@
+	 */
+	
+	$p = strrpos($service, "@");
+	if ($p !== false) {
+		$host = substr($service, $p);
+		$service = substr($service, 0, $p);
+	} else {
+		$host = "";
+	}
+
 	$svc_type = strtok($service, "^")."^";
 	$svc_value = strtok(null);
 
-	// get importance level and display name
-	// for type^value, fall back to just type
-	if (isset($AllPrivileges[$service])) {
-		list ($level, $name) = $AllPrivileges[$service];
-		if ($name === null and isset($AllPrivileges[$svc_type])) {
-			$name = $AllPrivileges[$svc_type][1];
-		}
-	} elseif (isset($AllPrivileges[$svc_type])) {
-		list ($level, $name) = $AllPrivileges[$svc_type];
+	if (strlen($host)) {
+		if (isset($AllPrivileges["$service@$host"]))
+			$descr = $AllPrivileges["$service@$host"];
+		elseif (isset($AllPrivileges["$service@"]))
+			$descr = $AllPrivileges["$service@"];
+		else
+			$descr = null;
 	} else {
-		$level = PRIV_UNKNOWN;
-		$name = "(unknown service) <strong class=\"service\">$service</strong>";
+		if (isset($AllPrivileges["$service"]))
+			$descr = $AllPrivileges["$service"];
+		elseif (isset($AllPrivileges["$svc_type"]))
+			$descr = $AllPrivileges["$svc_type"];
+		elseif (isset($AllPrivileges["$service@"]))
+			$descr = $AllPrivileges["$service@"];
+		elseif (isset($AllPrivileges["$svc_type@"]))
+			$descr = $AllPrivileges["$svc_type@"];
+		else
+			$descr = null;
 	}
 
-	$name = str_replace('{}', htmlspecialchars($svc_value), $name);
+	if ($descr) {
+		@list ($level, $name, $title) = $descr;
+	} else {
+		$level = P_UNKNOWN;
+		$name = "<i>(unknown service)</i> <strong class=\"service\">$service</strong>";
+		$title = null;
+	}
 
-	return [$level, $name];
+	if (strlen($svc_value))
+		$name = str_replace('{}', htmlspecialchars($svc_value), $name);
+
+	return [$level, $name, $title];
 }
 
 function find_acls($user_dn) {
@@ -121,6 +161,9 @@ sort($acl_host);
 //// prepare everything for display
 $Access = array();
 $AccessHidden = 0;
+
+$AccessUnknown = array();
+$AccessObsolete = array();
 
 $visibleGroups = array();
 foreach ($Groups as $dn) {
@@ -187,48 +230,52 @@ if (count($acl_server_misc)) {
 	foreach ($acl_server_misc as $host => $services) {
 		if ($More && count($services)) {
 			foreach ($services as $service) {
-				list ($level, $name) = describe_service($service);
-				$Access[] = ["$name on <code class=\"host\"><u>$host</u></code>",
-					     "<code>\"$service\"</code>",
-					     "Granted by ACL entry \"$service\" in the server's ACL subtree."];
+				list ($level, $name, $title) = describe_service("$service@$host");
+				$text = "$name on <code class=\"host\"><u>$host</u></code>";
+				if (strlen($title))
+					$text = "<span title=\"".H($title)."\">".$text."</span>";
+				$entry = [$text,
+					  "<code>\"$service\"</code>",
+					  "Granted by ACL entry \"$service\" in the server's ACL subtree."];
+				if ($level & P_UNKNOWN)
+					$AccessUnknown[] = $entry;
+				else
+					$Access[] = $entry;
 			}
-			//$services_s = implode(", ", $services);
-			//$services_hs = implode_e(strprefix_a($services, "<code>\"", "\"</code>"));
-			//$Access[] = [plural($services, "unknown service")." $services_hs on <i>$host</i>",
-			//	     "ACL entries",
-			//	     "Granted by ACL ".plural($services, "entry")." [$services_s] in the server's ACL subtree."];
 		} else $AccessHidden += count($services) ? 1 : 0;
 	}
 }
 
 // global privileges
 
-$AccessUnknown = array();
-$AccessObsolete = array();
-
 foreach ($acl_misc as $service) {
-	list ($level, $name) = describe_service($service);
+	list ($level, $name, $title) = describe_service($service);
 
 	if (@in_array($service, $Entry["clueauthorizedability"]))
-		$attr = "clue­Authorized­Ability";
+		$attr = "clueAuthorizedAbility";
 	else
-		$attr = "authorized­Service";
+		$attr = "authorizedService";
 
 	$note = "<code>\"$service\"</code>";
-	$comment = "Granted by \"$service\" in\nthe \"$attr\" attribute\non the user's account.";
+	$comment = "Granted by \"$service\" in the \"$attr\" attribute on the user's account.";
 
-	// display entries based on their importance
-	if ($level & PRIV_IMPORTANT || $More) {
+	if ($level & P_IMPORTANT || $More) {
 		if ($service == "mail" and isset($Entry["mailquota"])) {
 				$name = "$name <em>(quota: ".formatQuota($Entry["mailquota"]).")</em>";
 		}
 
-		if ($level & PRIV_OBSOLETE) {
+		if ($level & P_OBSOLETE)
 			$name = "<small>(historical)</small> ".$name;
+
+		if (strlen($title))
+			$name = "<span title=\"".H($title)."\">".$name."</span>";
+
+		if ($level & P_OBSOLETE)
 			$AccessObsolete[] = [$name, $note, $comment];
-			continue;
-		}
-		$Access[] = [$name, $note, $comment];
+		elseif ($level & P_UNKNOWN)
+			$AccessUnknown[] = [$name, $note, $comment];
+		else
+			$Access[] = [$name, $note, $comment];
 	} else {
 		$AccessHidden++;
 	}
