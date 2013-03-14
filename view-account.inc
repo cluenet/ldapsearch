@@ -69,12 +69,22 @@ if (!$More)
 </p>
 <?php endif; ?>
 
-<?php if (isset($Entry["timezone"])): ?>
-<p>
+<?php if (isset($Entry["timezone"])) {
+	try {
+		$tz = new DateTimeZone($Entry["timezone"]);
+		$date = new DateTime(NULL, $tz);
+		$date_s = $date->format("l, H:i");
+		$tzo_s = $date->format("P");
+		$tip = "It is currently $date_s (offset $tzo_s from UTC) in this timezone.";
+	} catch (Exception $e) {
+		$tip = "The timezone name is invalid.";
+	}
+?>
+<p title="<?= H($tip) ?>">
 	<span class="label">Timezone:</span>
 	<span class="value"><?= $Entry["timezone"] ?></span>
 </p>
-<?php endif; ?>
+<?php }; ?>
 </div>
 <?php endif; ?>
 
