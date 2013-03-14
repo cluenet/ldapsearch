@@ -29,7 +29,6 @@ $SingleAttributes = array(
 	'st', ## ?
 	'mail',
 	'sn',
-	'uid',
 	'uidnumber',
 	'gidnumber',
 	'homedirectory',

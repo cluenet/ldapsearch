@@ -13,6 +13,15 @@
 	<span class="value important"><?= $Entry["uid"] ?></span>
 </p>
 
+<?php if ($More && count($Entry["uids"]) > 1) {
+	$aliases = array_diff($Entry["uids"], array($Entry["uid"]));
+?>
+<p>
+	<span class="label">Aliases:</span>
+	<span class="value"><?= implode(", ", $aliases) ?></span>
+</p>
+<?php } ?>
+
 <?php if (isset($Entry["cluepoints"])) { ?>
 <p>
 	<span class="label">Cluepoints:</span>

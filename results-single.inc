@@ -1,10 +1,17 @@
 <?php
 $res = ldap_first_entry($ldapConn, $lsearch);
 $Entry = ldap_get_attributes($ldapConn, $res);
-// do some preparations on the result
+
 $Entry = clean_result($Entry);
-#$Entry = htmlize($Entry);
 $Entry["dn"] = ldap_get_dn($ldapConn, $res);
+
+// [uid] is the current UID, and [uids] are all (past) UIDs & aliases
+$Entry["uids"] = $Entry["uid"];
+$dn_vals = ldap_explode_dn($Entry["dn"], !true);
+if (substr($dn_vals[0], 0, 4) === "uid=")
+	$Entry["uid"] = substr($dn_vals[0], 4);
+else
+	$Entry["uid"] = $Entry["uids"][0];
 
 if (isset($Entry["clueircnick"]))
 	$Entry["cluepoints"] = getCluePoints($Entry["clueircnick"]);
